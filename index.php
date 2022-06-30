@@ -1,4 +1,9 @@
 <?php
+/*
+ * @author yanglong
+ * @date 2022年6月30日18:10:56
+ * @description php守护进程模式运行原理
+ * */
 $param     = $argv;
 $daemonize = false;//是否已守护进程模式运行
 $flag      = true;//是否结束脚本运行
