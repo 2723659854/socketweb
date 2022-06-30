@@ -62,10 +62,22 @@ class HttpServer
                     //todo 首先要定义一个模板变量识别规则，就是比如使用{{作为变量开始符号，使用 }}作为变量结束标识符，然后使用正则匹配，找到HTML文件中的变量，然后将计算结果替换变量，生成的最终的
                     //todo 内容作为html内容返回给浏览器
                     //todo 如果是借口，则直接返回字符串，字符串都是转化为json格式
-                    socket_write($socketAccept, $str, 1024);
+                $content="<!DOCTYPE html>
+<html lang=\"en\">
+<head>
+    <meta charset=\"UTF-8\">
+    <title>Title</title>
+</head>
+<body>
+ <h1>".$str."</h1>
+
+</body>
+</html>";
+                    socket_write($socketAccept, $content, 1024);
+
 
             }
-            socket_write($socketAccept, "\r\n欢迎使用php自定义服务", 100);
+            socket_write($socketAccept, "\r\n welcome to  php server", 100);
             socket_close($socketAccept);
 
         }
