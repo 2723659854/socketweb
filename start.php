@@ -43,9 +43,6 @@ if (count($param) > 1) {
                         \posix_kill($master_id, SIGKILL);
                     }
                 }
-                //关闭http服务
-                global $httpServer;
-                $httpServer->close();
                 echo "关闭进程中...\r\n";
             } else {
                 echo "当前环境是windows,只能在控制台运行\r\n";
@@ -64,7 +61,6 @@ if (count($param) > 1) {
 
                 $daemonize = true;
                 echo "进程已重启\r\n";
-                exit(0);
             } else {
                 echo "当前环境是windows,只能在控制台运行\r\n";
             }
