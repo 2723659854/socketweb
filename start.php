@@ -8,13 +8,16 @@ $param     = $argv;
 $daemonize = false;//是否已守护进程模式运行
 $flag      = true;//是否结束脚本运行
 global $pid_file, $log_file, $httpServer;
-$httpServer = new HttpServer();
+
 $pid_file = './my_pid.txt';//pid存放文件
 $log_file = './log.txt';//业务逻辑存放文件
 //检测是否是windows运行环境
 $system = true;//Linux系统
 if (\DIRECTORY_SEPARATOR === '\\') {
     $system = false;//windows系统
+}else{
+    require_once './explain.php';
+    $httpServer = new HttpServer();
 }
 if (count($param) > 1) {
     switch ($param[1]) {
@@ -135,9 +138,6 @@ function daemon()
         exit(0);
     }
 }
-require_once './explain.php';
-
-
 //运行程序
 if ($daemonize) {
     daemon();
