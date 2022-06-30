@@ -51,7 +51,7 @@ class HttpServer
                     $content=require_once './test.php';
                     $code=speak();
                     //socket_write($socketAccept, $fileContent, strlen($fileContent));
-                    socket_write($socketAccept, $code, strlen($content));
+                    socket_write($socketAccept, $code, 10);
                     break;
             }
             socket_write($socketAccept, 'web serving', strlen('web serving'));
