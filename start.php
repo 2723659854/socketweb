@@ -109,6 +109,7 @@ function say()
 
 function  nginx(){
     global $httpServer;
+    $httpServer->close();
     $httpServer->run();
 }
 //以守护进程模式运行
