@@ -122,7 +122,7 @@ function daemon()
     if (-1 === \posix_setsid()) {
         throw new Exception("Setsid fail");
     }
-    say();
+    nginx();
     //再次创建一个子进程，Fork再次避免系统重新控制终端
     $pid = \pcntl_fork();
     if (-1 === $pid) {
