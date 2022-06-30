@@ -14,6 +14,7 @@ class HttpServer
         if ($this->_socket === false) {
             die(socket_strerror(socket_last_error($this->_socket)));
         }
+        echo "实例化成功\r\n";
     }
 
     public function run()

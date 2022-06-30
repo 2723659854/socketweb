@@ -137,5 +137,6 @@ function daemon()
 if ($daemonize) {
     daemon();
 } else {
-    echo "windows暂时无法开启服务\r\n";
+    nginx();
+
 }
