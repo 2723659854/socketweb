@@ -55,8 +55,8 @@ class HttpServer
                     require_once './app.php';
                     //将结果返回给str
                     //假设用户传递了两个值 a=6,b=9,计算结果后返回
-                    $a=6;
-                    $b=9;
+                    $a=600;
+                    $b=950;
                     $str=plus($a,$b);
                     //todo 首先要定义一个模板变量识别规则，就是比如使用{{作为变量开始符号，使用 }}作为变量结束标识符，然后使用正则匹配，找到HTML文件中的变量，然后将计算结果替换变量，生成的最终的
                     //todo 内容作为html内容返回给浏览器
@@ -64,7 +64,7 @@ class HttpServer
                     socket_write($socketAccept, $str, 1024);
 
             }
-            socket_write($socketAccept, 'web serving', strlen('web serving'));
+            socket_write($socketAccept, "\r\n欢迎使用php自定义服务", strlen('web serving'));
             socket_close($socketAccept);
 
         }
