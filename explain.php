@@ -47,10 +47,11 @@ class HttpServer
                 case "php":
                     socket_write($socketAccept, 'Content-Type: text/html' . PHP_EOL);
                     socket_write($socketAccept, '' . PHP_EOL);
-                    $fileContent = file_get_contents($fileName);
+                    //$fileContent = file_get_contents($fileName);
                     $content=require_once './test.php';
-                    socket_write($socketAccept, $fileContent, strlen($fileContent));
-                    socket_write($socketAccept, $content, strlen($content));
+                    $code=speak();
+                    //socket_write($socketAccept, $fileContent, strlen($fileContent));
+                    socket_write($socketAccept, $code, strlen($content));
                     break;
             }
             socket_write($socketAccept, 'web serving', strlen('web serving'));
