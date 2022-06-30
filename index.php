@@ -5,44 +5,57 @@ $flag      = true;//是否结束脚本运行
 global $pid_file, $log_file;
 $pid_file = './my_pid.txt';//pid存放文件
 $log_file = './log.txt';//业务逻辑存放文件
+//检测是否是windows运行环境
+$system=true;//Linux系统
+if (\DIRECTORY_SEPARATOR === '\\') {
+    $system=false;//windows系统
+}
 if (count($param) > 1) {
     switch ($param[1]) {
         case "start":
             //守护进程模式运行
             if (isset($param[2]) && ($param[2] == '-d')) {
-                $daemonize = true;
-            }
-            break;
-        case "stop":
-            //关闭进程
-            if (file_exists($pid_file)) {
-                $master_id = file_get_contents($pid_file);
-                if ($master_id > 0) {
-                    \posix_kill($master_id, SIGKILL);
-                    $fd = \fopen('./index.php', 'r');
-                    \flock($fd, LOCK_UN);
+                if ($system){
+                    $daemonize = true;
+                }else{
+                    echo "当前环境是windows,只能在控制台运行\r\n";
                 }
             }
-            echo "关闭进程中\r\n";
+            echo "进程启动...\r\n";
+            break;
+        case "stop":
+            if ($system){
+                //关闭进程
+                if (file_exists($pid_file)) {
+                    $master_id = file_get_contents($pid_file);
+                    if ($master_id > 0) {
+                        \posix_kill($master_id, SIGKILL);
+                    }
+                }
+                echo "关闭进程中...\r\n";
+            }else{
+                echo "当前环境是windows,只能在控制台运行\r\n";
+            }
             $flag = false;
             break;
         case "restart":
             //重启进程
-            if (file_exists($pid_file)) {
-                $master_id = file_get_contents($pid_file);
-                if ($master_id > 0) {
-                    \posix_kill($master_id, SIGKILL);
-                    $fd = \fopen('./index.php', 'r');
-                    \flock($fd, LOCK_UN);
+            if ($system){
+                if (file_exists($pid_file)) {
+                    $master_id = file_get_contents($pid_file);
+                    if ($master_id > 0) {
+                        \posix_kill($master_id, SIGKILL);
+                    }
                 }
+                $daemonize = true;
+                echo "进程已重启\r\n";
+            }else{
+                echo "当前环境是windows,只能在控制台运行\r\n";
             }
-            $daemonize = true;
-            echo "进程已重启\r\n";
             break;
         default:
             echo "未识别的命令\r\n";
             $flag = false;
-
     }
 } else {
     echo "缺少必要参数，你可以输入start,start -d,stop,restart\r\n";
