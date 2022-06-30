@@ -97,7 +97,7 @@ class HttpServer
 
 
             }
-            socket_write($socketAccept, "\r\n welcome to  php server", 100);
+            //socket_write($socketAccept, "\r\n welcome to  php server", 100);
             socket_close($socketAccept);
 
         }
