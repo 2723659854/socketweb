@@ -13,12 +13,9 @@ $pid_file = './my_pid.txt';//pid存放文件
 $log_file = './log.txt';//业务逻辑存放文件
 //检测是否是windows运行环境
 $system = true;//Linux系统
-require_once './explain.php';
 $httpServer=null;
 if (\DIRECTORY_SEPARATOR === '\\') {
     $system = false;//windows系统
-}else{
-    $httpServer=new HttpServer();
 }
 
 if (count($param) > 1) {
@@ -102,8 +99,10 @@ function say()
     }
 }
 
+//nginx服务
 function  nginx(){
-    global $httpServer;
+    require_once './explain.php';
+    $httpServer=new HttpServer();
     $httpServer->run();
 }
 //以守护进程模式运行
