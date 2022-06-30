@@ -6,25 +6,25 @@ global $pid_file, $log_file;
 $pid_file = './my_pid.txt';//pid存放文件
 $log_file = './log.txt';//业务逻辑存放文件
 //检测是否是windows运行环境
-$system=true;//Linux系统
+$system = true;//Linux系统
 if (\DIRECTORY_SEPARATOR === '\\') {
-    $system=false;//windows系统
+    $system = false;//windows系统
 }
 if (count($param) > 1) {
     switch ($param[1]) {
         case "start":
             //守护进程模式运行
             if (isset($param[2]) && ($param[2] == '-d')) {
-                if ($system){
+                if ($system) {
                     $daemonize = true;
-                }else{
+                } else {
                     echo "当前环境是windows,只能在控制台运行\r\n";
                 }
             }
             echo "进程启动...\r\n";
             break;
         case "stop":
-            if ($system){
+            if ($system) {
                 //关闭进程
                 if (file_exists($pid_file)) {
                     $master_id = file_get_contents($pid_file);
@@ -33,14 +33,14 @@ if (count($param) > 1) {
                     }
                 }
                 echo "关闭进程中...\r\n";
-            }else{
+            } else {
                 echo "当前环境是windows,只能在控制台运行\r\n";
             }
             $flag = false;
             break;
         case "restart":
             //重启进程
-            if ($system){
+            if ($system) {
                 if (file_exists($pid_file)) {
                     $master_id = file_get_contents($pid_file);
                     if ($master_id > 0) {
@@ -49,7 +49,7 @@ if (count($param) > 1) {
                 }
                 $daemonize = true;
                 echo "进程已重启\r\n";
-            }else{
+            } else {
                 echo "当前环境是windows,只能在控制台运行\r\n";
             }
             break;
@@ -59,7 +59,7 @@ if (count($param) > 1) {
     }
 } else {
     echo "缺少必要参数，你可以输入start,start -d,stop,restart\r\n";
-    $flag=false;
+    $flag = false;
 }
 
 //中间件，控制程序是否继续运行
@@ -68,11 +68,11 @@ if ($flag == false) {
 }
 
 //这里采用文件添加独占锁的形式，如果一个进程在后台运行，这个文件被占用了，这个脚本就不能往下执行了，只有这个进程被关闭后才会被释放
-if ($daemonize){
-    $fd=fopen('./lock.txt','w');
+if ($daemonize) {
+    $fd = fopen('./lock.txt', 'w');
     //这里必须是非阻塞写入，否则进程一直挂在这里不动了
-    $res=flock($fd,LOCK_EX|LOCK_NB);
-    if (!$res){
+    $res = flock($fd, LOCK_EX | LOCK_NB);
+    if (!$res) {
         echo "进程正在运行，请勿重复启动\r\n";
         exit(0);
     }
@@ -84,7 +84,7 @@ function say()
     while (true) {
         $fp = fopen($log_file, 'a+');
         //记录当前进程id和时间，判断是否是单进程运行
-        fwrite($fp, time() ."----". getmypid()."\r\n");
+        fwrite($fp, time() . "----" . getmypid() . "\r\n");
         fclose($fp);
         sleep(2);
     }
