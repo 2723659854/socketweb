@@ -44,15 +44,22 @@ class HttpServer
                     $fileContent = file_get_contents($fileName);
                     socket_write($socketAccept, $fileContent, strlen($fileContent));
                     break;
-                case "php":
+                default:
+                    //其他类型的都默认为php类型文件，需要php文件解释
                     socket_write($socketAccept, 'Content-Type: text/html' . PHP_EOL);
                     socket_write($socketAccept, '' . PHP_EOL);
-                    //$fileContent = file_get_contents($fileName);
-                    $content=require_once './test.php';
-                    $code=speak();
-                    //socket_write($socketAccept, $fileContent, strlen($fileContent));
-                    socket_write($socketAccept, $code, 10);
-                    break;
+                    //todo  这个test.php 文件 可以写入路由文件，
+                    //路由文件
+                    require_once './route.php';
+                    //app解释器，根据上面的路由文件，解析出文件位置，然后加载对应的代码，执行里面的代码
+                    require_once './app.php';
+                    //将结果返回给str
+                    //假设用户传递了两个值 a=6,b=9,计算结果后返回
+                    $a=6;
+                    $b=9;
+                    $str=plus($a,$b);
+                    socket_write($socketAccept, $str, 1024);
+
             }
             socket_write($socketAccept, 'web serving', strlen('web serving'));
             socket_close($socketAccept);
