@@ -37,6 +37,8 @@ if (count($param) > 1) {
                         \posix_kill($master_id, SIGKILL);
                     }
                 }
+                global $httpServer;
+                $httpServer->close();
                 echo "关闭进程中...\r\n";
             } else {
                 echo "当前环境是windows,只能在控制台运行\r\n";

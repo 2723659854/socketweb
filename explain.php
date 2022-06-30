@@ -24,7 +24,7 @@ class HttpServer
         while (true) {
             $socketAccept = socket_accept($this->_socket);
             $request      = socket_read($socketAccept, 1024);
-            echo $request;
+            //echo $request;
             socket_write($socketAccept, 'HTTP/1.1 200 OK' . PHP_EOL);
             socket_write($socketAccept, 'Date:' . date('Y-m-d H:i:s') . PHP_EOL);
 
@@ -66,11 +66,11 @@ class HttpServer
 <html lang=\"en\">
 <head>
     <meta charset=\"UTF-8\">
-    <title>Title</title>
+    <title>一个PHP服务器</title>
 </head>
 <body>
  <h1>".$str."</h1>
-
+<h2>我是一个PHP服务器</h2>
 </body>
 </html>";
                     socket_write($socketAccept, $content, 1024);
