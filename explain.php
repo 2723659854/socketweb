@@ -4,7 +4,7 @@ set_time_limit(0);
 class HttpServer
 {
     private $ip   = '0.0.0.0';
-    private $port = 8008;
+    private $port = 8020;
 
     private $_socket = null;
 
