@@ -108,7 +108,6 @@ function say()
 }
 
 function  nginx(){
-    echo getmypid();
     global $httpServer;
     $httpServer->run();
 }
@@ -148,6 +147,11 @@ function daemon()
 if ($daemonize) {
     daemon();
 } else {
-    echo "Windows不支持服务器运行，不知道什么原因\r\n";
-   exit(0);
+    if (!$system){
+        echo "Windows不支持服务器运行，不知道什么原因\r\n";
+        exit(0);
+    }else{
+        nginx();
+    }
+
 }
