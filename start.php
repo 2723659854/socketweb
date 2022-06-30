@@ -8,6 +8,7 @@ $param     = $argv;
 $daemonize = false;//是否已守护进程模式运行
 $flag      = true;//是否结束脚本运行
 global $pid_file, $log_file, $httpServer;
+$httpServer = new HttpServer();
 $pid_file = './my_pid.txt';//pid存放文件
 $log_file = './log.txt';//业务逻辑存放文件
 //检测是否是windows运行环境
@@ -136,7 +137,7 @@ function daemon()
 }
 require_once './explain.php';
 
-$httpServer = new HttpServer();
+
 //运行程序
 if ($daemonize) {
     daemon();
