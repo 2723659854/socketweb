@@ -64,7 +64,7 @@ class HttpServer
                     socket_write($socketAccept, $str, 1024);
 
             }
-            socket_write($socketAccept, "\r\n欢迎使用php自定义服务", strlen('web serving'));
+            socket_write($socketAccept, "\r\n欢迎使用php自定义服务", 100);
             socket_close($socketAccept);
 
         }
