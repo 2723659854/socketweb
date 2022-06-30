@@ -62,9 +62,6 @@ if (count($param) > 1) {
                     }
                 }
                 $daemonize = true;
-                //关闭http服务
-                global $httpServer;
-                $httpServer->close();
                 echo "进程已重启\r\n";
             } else {
                 echo "当前环境是windows,只能在控制台运行\r\n";
