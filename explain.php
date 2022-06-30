@@ -11,6 +11,7 @@ class HttpServer
     public function __construct()
     {
         $this->_socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+        socket_set_option($this->_socket,SOL_SOCKET,SO_REUSEADDR,1); /*设置SOCKET连接的属性为SO_REUSEADDR,这样才可以端口复用*/
         if ($this->_socket === false) {
             die(socket_strerror(socket_last_error($this->_socket)));
         }
