@@ -18,7 +18,7 @@ class HttpServer
         if ($this->_socket === false) {
             die(socket_strerror(socket_last_error($this->_socket)));
         }
-        echo "实例化成功\r\n";
+        //echo "实例化成功\r\n";
     }
 
     public function run()
@@ -89,7 +89,7 @@ class HttpServer
 <body>
 
  <h1>".$a."+".$b."=".$str."</h1>
-<h2>我是一个PHP服务器</h2>
+<h2>我是一个PHP服务器，兼容Windows和linux系统</h2>
 <img src='./demo.png' height='500px' width='auto'>
 </body>
 </html>";

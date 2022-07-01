@@ -9,6 +9,7 @@ $daemonize = false;//是否已守护进程模式运行
 $flag      = true;//是否结束脚本运行
 global $pid_file, $log_file;
 $httpServer=null;
+$need_close=false;//是否需要关闭进程
 $pid_file = './my_pid.txt';//pid存放文件
 $log_file = './log.txt';//业务逻辑存放文件
 //检测是否是windows运行环境
@@ -17,7 +18,9 @@ $httpServer=null;
 if (\DIRECTORY_SEPARATOR === '\\') {
     $system = false;//windows系统
 }
-
+//运行环境检测
+check_env();
+//运行参数处理
 if (count($param) > 1) {
     switch ($param[1]) {
         case "start":
@@ -29,18 +32,13 @@ if (count($param) > 1) {
                     echo "当前环境是windows,只能在控制台运行\r\n";
                 }
             }
-            echo "进程启动...\r\n";
+            echo "进程启动中...\r\n";
             break;
         case "stop":
             if ($system) {
-                //关闭进程
-                if (file_exists($pid_file)) {
-                    $master_id = file_get_contents($pid_file);
-                    if ($master_id > 0) {
-                        \posix_kill($master_id, SIGKILL);
-                    }
-                }
-                echo "关闭进程中...\r\n";
+                //关闭正在运行的进程
+                close();
+                echo "进程已关闭\r\n";
             } else {
                 echo "当前环境是windows,只能在控制台运行\r\n";
             }
@@ -49,15 +47,10 @@ if (count($param) > 1) {
         case "restart":
             //重启进程
             if ($system) {
-                if (file_exists($pid_file)) {
-                    $master_id = file_get_contents($pid_file);
-                    if ($master_id > 0) {
-                        \posix_kill($master_id, SIGKILL);
-                    }
-                }
-
+                //关闭正在运行的进程
+                close();
                 $daemonize = true;
-                echo "进程已重启\r\n";
+                echo "进程重启中...\r\n";
             } else {
                 echo "当前环境是windows,只能在控制台运行\r\n";
             }
@@ -71,20 +64,31 @@ if (count($param) > 1) {
     $flag = false;
 }
 
+
 //中间件，控制程序是否继续运行
 if ($flag == false) {
-    exit("进程已关闭，脚本退出运行\r\n");
+    exit("脚本退出运行\r\n");
 }
 
 //这里采用文件添加独占锁的形式，如果一个进程在后台运行，这个文件被占用了，这个脚本就不能往下执行了，只有这个进程被关闭后才会被释放
-if ($daemonize) {
+if ($system) {
+    //不仅daemon模式检查是否已经运行，
     $fd = fopen('./lock.txt', 'w');
     //这里必须是非阻塞写入，否则进程一直挂在这里不动了
     $res = flock($fd, LOCK_EX | LOCK_NB);
     if (!$res) {
-        echo "进程正在运行，请勿重复启动\r\n";
+        echo "已有脚本正在运行，请勿重复启动\r\n";
         exit(0);
     }
+}
+
+//运行程序
+if ($daemonize) {
+    daemon();
+} else {
+    echo "http://127.0.0.1:8020\r\n";
+    echo "进程启动完成,你可以按ctrl+c停止运行\r\n";
+    nginx();
 }
 //业务逻辑代码示例，用于观测脚本是否正在运行，具体业务逻辑自己实现
 function say()
@@ -115,7 +119,10 @@ function daemon()
     if (-1 === $pid) {
         //创建子进程失败
         throw new Exception('Fork fail');
-    } elseif ($pid > 0) {//
+    } elseif ($pid > 0) {
+        //必须在主进程结束前打印，否则控制台被关闭后看不到
+        echo "http://127.0.0.1:8020\r\n";
+        echo "进程启动完成,你可以输入php start.php stop停止运行\r\n";
         //关闭主进程
         exit(0);
     }
@@ -127,7 +134,9 @@ function daemon()
     if (-1 === \posix_setsid()) {
         throw new Exception("Setsid fail");
     }
+    //业务逻辑在子进程运行
     nginx();
+
     //再次创建一个子进程，Fork再次避免系统重新控制终端
     $pid = \pcntl_fork();
     if (-1 === $pid) {
@@ -137,15 +146,24 @@ function daemon()
         exit(0);
     }
 }
-//运行程序
-if ($daemonize) {
-    daemon();
-} else {
-    if (!$system){
-        echo "Windows不支持服务器运行，不知道什么原因\r\n";
-        exit(0);
-    }else{
-        nginx();
+//关闭运行的进程
+function close(){
+    echo "关闭进程中...\r\n";
+    global $pid_file;
+    if (file_exists($pid_file)) {
+        $master_id = file_get_contents($pid_file);
+        if ($master_id > 0) {
+            \posix_kill($master_id, SIGKILL);
+            //等待一秒，给程序执行足够的执行时间
+            sleep(1);
+        }
     }
-
 }
+
+//环境依赖检测
+function check_env(){
+    if (!extension_loaded('sockets')) {
+        exit("请先安装sockets扩展，然后开启php.ini的sockets扩展");
+    }
+}
+
