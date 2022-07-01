@@ -1,5 +1,6 @@
 <?php
 //控制器中间件，负责根据路由加载对应的类和方法，并传入参数，返回结果
+require_once './function.php';
 function handle($url,$param){
     list($file,$class,$method)=explode('@',$url);
     //todo 这种都不抛出异常，而是将错误记录然后渲染到一个文件上去
@@ -17,9 +18,11 @@ function handle($url,$param){
         //throw new Exception($method.'方法不存在');
         return  dispay('index',['msg'=>$method.'方法不存在']);
     }
-    return $class->$method($param);
+    //todo 需要一个request类，然后将参数写入到request里面
+    return $class->$method( $param);
 }
 
+//抛出异常
 function dispay($path,$param){
     //首先是检测是否有对应的文件
     //读取其中的内容
@@ -48,3 +51,5 @@ function dispay($path,$param){
 
     return $content;
 }
+
+

@@ -9,21 +9,21 @@ function route($url){
     switch ($num){
         case 0:
             //没有路径直接访问根路径的index模块的index控制器的index方法
-            return './index/Index.php@Index@index';
+            return './controller/index/Index.php@Index@index';
             break;
         case 1:
             //没有路径直接访问根路径的index模块的index控制器的index方法
-            return './index/Index.php@Index@'.$new_url[0];
+            return './controller/index/Index.php@Index@'.$new_url[0];
             break;
         case 2:
             //没有路径直接访问根路径的index模块的index控制器的index方法
-            return './index/'.ucwords($new_url[0]).'.php@'.ucwords($new_url[0]).'@'.$new_url[1];
+            return './controller/index/'.ucwords($new_url[0]).'.php@'.ucwords($new_url[0]).'@'.$new_url[1];
             break;
         case 3:
             //没有路径直接访问根路径的index模块的index控制器的index方法
-            return './'.$new_url[0].'/'.ucwords($new_url[1]).'.php@'.ucwords($new_url[1]).'@'.$new_url[2];
+            return './controller/'.$new_url[0].'/'.ucwords($new_url[1]).'.php@'.ucwords($new_url[1]).'@'.$new_url[2];
             break;
         default:
-            return './index/Index.php@Index@index';
+            return './controller/index/Index.php@Index@index';
     }
 }
