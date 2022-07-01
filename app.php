@@ -1,6 +1,18 @@
 <?php
-//todo 这个app容器，负责根据路由的解析的路径，加载对应的文件，执行文件中的方法，计算结果并返回
-//这里省略以上逻辑，简单实现一个方法，代表容器计算结果
-function plus($a,$b){
-    return $a+$b;
+//控制器中间件，负责根据路由加载对应的类和方法，并传入参数，返回结果
+function handle($url,$param){
+    list($file,$class,$method)=explode('@',$url);
+    //todo 这种都不抛出异常，而是将错误记录然后渲染到一个文件上去
+    if (!file_exists($file)){
+        throw new Exception($file.'文件不存在');
+    }
+    require_once $file;
+    if (!class_exists($class)){
+        throw new Exception($class.'类不存在');
+    }
+    $class=new $class;
+    if (!method_exists($class,$method)){
+        throw new Exception($method.'方法不存在');
+    }
+    return $class->$method($param);
 }

@@ -1,5 +1,9 @@
 <?php
 set_time_limit(0);
+//路由文件
+require_once './route.php';
+//app解释器，根据上面的路由文件，解析出文件位置，然后加载对应的代码，执行里面的代码
+require_once './app.php';
 //这里使用php解析请求
 class HttpServer
 {
@@ -27,6 +31,7 @@ class HttpServer
         socket_bind($this->_socket, $this->ip, $this->port);
         //socket开始监听
         socket_listen($this->_socket, 5);
+        //这里通过一个死循环达到常驻内存的效果
         while (true) {
             //接受socket信息流，监听连接并接受信息流
             $socketAccept = socket_accept($this->_socket);
@@ -38,6 +43,8 @@ class HttpServer
             socket_write($socketAccept, 'Date:' . date('Y-m-d H:i:s') . PHP_EOL);
             //解析用户访问的文件
             $fileName = $this->getUri($request);
+            $url=$fileName;//用户访问的路由，问号前面的是路径，后面的是参数
+
             //获取文件名后缀
             $fileExt  = preg_replace('/^.*\.(\w+)$/', '$1', $fileName);
             //拼接文件完整路径
@@ -65,34 +72,22 @@ class HttpServer
                     break;
                 default:
                     //其他类型的都默认为php类型文件，需要php文件解释
+                    //非静态资源文件解析路由和参数
+                    //todo  这里有问题
+                    $content="hello";
+                    if (strpos($url,'?')){
+                        $request_url=explode('?',$url);
+                        $route=$request_url[0];
+                        $params=explode('&',$request_url[1]);
+                        $_param=[];
+                        foreach ($params as $k=>$v){
+                            $_v=explode('=',$v);
+                            $_param[$_v[0]]=$_v['1'];
+                        }
+                        $content=handle(route($route),$_param);
+                    }
                     socket_write($socketAccept, 'Content-Type: text/html' . PHP_EOL);
                     socket_write($socketAccept, '' . PHP_EOL);
-                    //todo  这个test.php 文件 可以写入路由文件，
-                    //路由文件
-                    require_once './route.php';
-                    //app解释器，根据上面的路由文件，解析出文件位置，然后加载对应的代码，执行里面的代码
-                    require_once './app.php';
-                    //将结果返回给str
-                    //假设用户传递了两个值 a=6,b=9,计算结果后返回
-                    $a=600;
-                    $b=950;
-                    $str=plus($a,$b);
-                    //todo 首先要定义一个模板变量识别规则，就是比如使用{{作为变量开始符号，使用 }}作为变量结束标识符，然后使用正则匹配，找到HTML文件中的变量，然后将计算结果替换变量，生成的最终的
-                    //todo 内容作为html内容返回给浏览器
-                    //todo 如果是借口，则直接返回字符串，字符串都是转化为json格式
-                $content="<!DOCTYPE html>
-<html lang=\"en\">
-<head>
-    <meta charset=\"UTF-8\">
-    <title>一个PHP服务器</title>
-</head>
-<body>
-
- <h1>".$a."+".$b."=".$str."</h1>
-<h2>我是一个PHP服务器，兼容Windows和linux系统</h2>
-<img src='./demo.png' height='500px' width='auto'>
-</body>
-</html>";
                     socket_write($socketAccept, $content, 1024);
 
 
