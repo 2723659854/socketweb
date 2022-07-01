@@ -1,5 +1,7 @@
 <?php
-class Fuck
+namespace Model;
+use mysqli;
+class BaseModel
 {
     public $value;
     public $mysql;
@@ -11,9 +13,11 @@ class Fuck
     public function __construct($str=null)
     {
         $this->value = $str;
-        $mysqli = new mysqli("localhost", "root", "root", "test", '3306');
+        $mysqli = new mysqli("127.0.0.1", "root", "root", "test", '3306');
         $mysqli->set_charset('utf8');
         $this->mysql = $mysqli;
+        $this->sql=$this->sql."select * from ".$this->table;
+
     }
 
     public function trim($t)
@@ -47,11 +51,7 @@ class Fuck
 
     public function where($name,$logic,$value){
         $this->sql=$this->sql.' where `'.$name.'` '.$logic.' "'.$value.'"';
-        return $this;
-    }
-
-    public function table($name){
-        $this->sql=$this->sql.' select * from '.$name.' ';
+        //print_r($this->sql);
         return $this;
     }
 
@@ -74,17 +74,20 @@ class Fuck
     public function whereIn(){
 
     }
+
+    //关闭连接
+    public function close(){
+        //$this->mysql->close();
+    }
 }
 
-$class=new Fuck(' SSF');
+//$class=new BaseModel(' SSF');
 //echo $class->trim('0')->strlen();
 
 //每一次的查询都必须单独实例化
 //可执行的语句first方法
-$data=$class->table('user')
-    ->where('username','=','test')
-    ->first();
-print_r($data);
+//$data=$class ->where('username','=','test') ->first();
+//print_r($data);
 //测试get方法
-$data2=$class->table('user')->where('id','>',1)->get();
-print_r($data2);
+//$data2=$class->where('id','>=',1)->get();
+//print_r($data2);

@@ -1,6 +1,5 @@
 <?php
-require_once './view.php';
-
+use Model\User;
 class Index
 {
     //如果需要渲染模板就调用view 不需要渲染模板就不调用view
@@ -20,8 +19,9 @@ class Index
         }else{
             $str='say hello';
         }
+        $user=new User();
+        $data=$user->where('username','=','test')->first();
 
-        //return view('index',['var'=>$param['a']+$param['b']]);
-        return view('index/index',['var'=>$var,'str'=>$str]);
+        return view('index/index',['var'=>$var,'str'=>$str,'user'=>json_encode($data)]);
     }
 }

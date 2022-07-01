@@ -10,3 +10,7 @@ function input(?string $name){
         }
     }
 }
+
+function app_path(){
+    return __DIR__;
+}
