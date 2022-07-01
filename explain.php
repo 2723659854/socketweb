@@ -73,7 +73,7 @@ class HttpServer
                 default:
                     //其他类型的都默认为php类型文件，需要php文件解释
                     //非静态资源文件解析路由和参数
-                    //todo  这里有问题
+                    //todo  这里有问题 不管有没有参数都要解析路由
                     $content="hello";
                     if (strpos($url,'?')){
                         $request_url=explode('?',$url);
@@ -85,6 +85,8 @@ class HttpServer
                             $_param[$_v[0]]=$_v['1'];
                         }
                         $content=handle(route($route),$_param);
+                    }else{
+                        $content=handle(route($url),[]);
                     }
                     socket_write($socketAccept, 'Content-Type: text/html' . PHP_EOL);
                     socket_write($socketAccept, '' . PHP_EOL);
