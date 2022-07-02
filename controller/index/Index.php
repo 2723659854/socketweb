@@ -1,12 +1,16 @@
 <?php
 use Model\User;
 use Model\Book;
+use Request;
 class Index
 {
     //如果需要渲染模板就调用view 不需要渲染模板就不调用view
-    public function __construct(){ }
+    public function __construct(){
+
+    }
     //控制器里面写了一个index方法
-    public function index($param){
+    public function index(Request $request){
+        print_r($request);
         if (isset($param['var'])){
             $var=$param['var'];
         }else{

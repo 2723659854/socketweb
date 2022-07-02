@@ -2,6 +2,7 @@
 //控制器中间件，负责根据路由加载对应的类和方法，并传入参数，返回结果
 require_once './function.php';
 require_once './view.php';
+require_once './Request.php';
 //加载控制器和所有模型,否则无法直接use使用某一个类
 function traverse($path = '.')
 {
@@ -46,8 +47,10 @@ function handle($url, $param)
         //throw new Exception($method.'方法不存在');
         return dispay('index', ['msg' => $method . '方法不存在']);
     }
+    $fuck=new Request();
+    $fuck->value=['test'=>$param];
     //todo 需要一个request类，然后将参数写入到request里面
-    return $class->$method($param);
+    return $class->$method($fuck);
 }
 
 //抛出异常
