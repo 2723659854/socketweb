@@ -7,17 +7,20 @@ use mysqli_sql_exception;
 class BaseModel
 {
 
-    protected $host = null;
-    protected $username = null;
-    protected $password = null;
-    protected $dbname = null;
-    protected $port = null;
-    protected $type = 'mysql';
+    private $host = null;
+    private $username = null;
+    private $password = null;
+    private $dbname = null;
+    private $port = null;
+    private $type = 'mysql';
 
-    public $mysql;
-    public $sql;
+    private $mysql;
+    private $sql;
     public $table = 'user';
-    public $field='*';
+    private $field='*';
+    private $order='id asc';
+    private $limit=0;
+    private $offset=0;
 
 
     public function __construct()
@@ -41,30 +44,62 @@ class BaseModel
 
     //下面是数据库的链式操作
 
+    /**
+     * 单条数据查询
+     * @return array|null
+     */
     public function first()
     {
-        $sql='select '.$this->field.' from '.$this->table.' '.$this->sql;
+        if ($this->limit){
+            $limit=' limit ' .$this->offset.' ,'.$this->limit;
+        }else{
+            $limit='';
+        }
+        $sql='select '.$this->field.' from '.$this->table.' where '.$this->sql.' order by '.$this->order.$limit;
 
         return $this->mysql->query($sql)->fetch_assoc();
 
     }
 
+    /**
+     * 多条数据查询
+     * @return array
+     */
     public function get()
     {
-        $sql='select '.$this->field.' from '.$this->table.' '.$this->sql;
+        if ($this->limit){
+            $limit=' limit ' .$this->offset.' ,'.$this->limit;
+        }else{
+            $limit='';
+        }
+        $sql='select '.$this->field.' from '.$this->table.' where '.$this->sql.' order by '.$this->order.$limit;
         $list = $this->mysql->query($sql);
         $data = [];
-        if ($list) {
-            while ($myrow = mysqli_fetch_row($list)) {
-                $data[] = $myrow;
+        //返回键值对对象
+        while($row=$list->fetch_object())
+        {
+            $array=[];
+            foreach ($row as $k=>$v){
+                $array[$k]=$v;
             }
+            $data[]=$array;
         }
         return $data;
     }
 
 
-    public function where($name, $logic, $value)
+    /**
+     * 查询条件
+     * @param string $name 字段
+     * @param string $logic 逻辑
+     * @param string|array $value 值
+     * @return $this
+     */
+    public function where(string $name, string $logic,  $value)
     {
+        if ($this->sql){
+            $this->sql=$this->sql.' and ';
+        }
         $int=false;
         if (is_array($value)){
             foreach ($value as $v){
@@ -84,22 +119,40 @@ class BaseModel
         }else{
             $str=' "' . $value . '"';
         }
-        $this->sql = $this->sql . '  where `' . $name . '` ' . $logic .$str;
+        $this->sql = $this->sql . ' `' . $name . '` ' . $logic .$str;
         return  $this;
     }
 
     //table 方法
-    public function table($name){
+
+    /**
+     * 设置表名
+     * @param string $name = tableName
+     * @return $this
+     */
+    public function table(string $name){
         $this->table=$name;
         return $this;
     }
     //设置查询的字段
+
+    /**
+     * 指定查询字段
+     * @param array $field =[field1,field2...]
+     * @return $this
+     */
     public function field(array $field){
         $this->field=implode(',',$field);
         return $this;
     }
 
     //写入
+
+    /**
+     * 插入
+     * @param array $param=[key1=>value1,key1=>value1,]
+     * @return bool|\mysqli_result
+     */
     public function insert(array $param){
         $key=[];
         $val=[];
@@ -115,6 +168,12 @@ class BaseModel
     }
 
     //update方法
+
+    /**
+     * 更新
+     * @param array $param =[key1=>value1,key2=>value2]
+     * @return bool|\mysqli_result
+     */
     public function update(array $param){
         $_param=[];
         foreach ($param as $k=>$v){
@@ -130,20 +189,42 @@ class BaseModel
 
 
     //删除
+
+    /**
+     * 删除
+     * @return bool|\mysqli_result
+     */
     public function delete(){
         $sql='delete from '.$this->table.' '.$this->sql;
         return $this->mysql->query($sql);
     }
+
+    //排序
+
+    /**
+     * 排序
+     * @param string $field 排序字段
+     * @param string $order 排序类型 asc 升序 desc 降序
+     * @return $this
+     */
+    public function order($field='id',$order='asc'){
+        $this->order=$field.' '.$order;
+        return $this;
+    }
+
+    //分页
+
+    /**
+     * 分页
+     * @param int $limit 查询条数
+     * @param int $offset 偏移量
+     * @return $this
+     */
+    public function limit($limit=0,$offset=0){
+
+        $this->offset=$offset;
+        $this->limit=$limit;
+        return $this;
+    }
 }
 
-//$mysql = new BaseModel();
-//$res=$mysql->table('user')->where('uername','=','test')->first();
-//$res=$mysql->table('book')->insert([
-//    'name'=>'哈利波特',
-//    'price'=>15.23,
-//    'create_time'=>time(),
-//    'update_time'=>time(),
-//]);
-//$res=$mysql->table('book')->where('id','=',1)->update(['name'=>'小朋友']);
-//$res=$mysql->table('book')->where('id','=',1)->delete();
-//print_r($res);
