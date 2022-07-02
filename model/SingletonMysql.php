@@ -2,26 +2,33 @@
 namespace Model;
 use PDO;
 use PDOException;
-class SingletonMysql
+trait SingletonMysql
 {
     //数据库连接必须使用单例，否则系统保存很多个连接，mysql压力变大
     private static $instance = null;
     private static $db = null;
-    const DB_TYPE = 'mysql';
-    const DB_HOST = '127.0.0.1';
-    const DB_NAME = 'test';
-    const DB_USER = 'root';
-    const DB_PASS = 'root';
-    const DB_MS = self::DB_TYPE . ':host=' . self::DB_HOST . ';' . 'dbname=' . self::DB_NAME;
+//    const DB_TYPE = 'mysql';
+//    const DB_HOST = '127.0.0.1';
+//    const DB_NAME = 'test';
+//    const DB_USER = 'root';
+//    const DB_PASS = 'root';
+//    const DB_MS = self::DB_TYPE . ':host=' . self::DB_HOST . ';' . 'dbname=' . self::DB_NAME;
 
-    public $sql=null;
-    public $table='user';
+    private $type = 'mysql';
+    private $host = '127.0.0.1';
+    private $db_name = 'test';
+    private $user = 'root';
+    private $pass = 'root';
+
+
+    private $sql=null;
+    public $table=null;
     protected $field='*';
     // 数据库连接
     private function __construct()
     {
         try {
-            self::$db = new PDO(self::DB_MS, self::DB_USER, self::DB_PASS);
+            self::$db = new PDO($this->type.':host=' . $this->host . ';' . 'dbname=' . $this->db_name, $this->user, $this->pass);
             self::$db->query('set names utf8mb4');
             self::$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
@@ -53,7 +60,12 @@ class SingletonMysql
     //原生sql查询
     public function query(string $sql = ''): array
     {
-        return self::$db->query($sql)->fetchAll();
+        try{
+            return self::$db->query($sql)->fetchAll();
+        }catch (PDOException $exception){
+            die("Error!: " . $exception->getMessage() . "<br/>");
+        }
+
     }
 
     //first方法
@@ -61,7 +73,12 @@ class SingletonMysql
     {
         $sql='select '.$this->field.' from '.$this->table.' '.$this->sql;
 
-        $res=self::$db->query($sql)->fetch();
+
+        try{
+            $res=self::$db->query($sql)->fetch();
+        }catch (PDOException $exception){
+            die("Error!: " . $exception->getMessage() . "<br/>");
+        }
         foreach ($res as $k=>&$v){
             if (is_numeric($k)){
                 unset($res[$k]);
@@ -75,8 +92,11 @@ class SingletonMysql
     public function get()
     {
         $sql='select '.$this->field.' from '.$this->table.' '.$this->sql;
-        $res= self::$db->query($sql)->fetchAll();
-
+        try{
+            $res= self::$db->query($sql)->fetchAll();
+        }catch (PDOException $exception){
+            die("Error!: " . $exception->getMessage() . "<br/>");
+        }
         foreach ($res as $k=>$v){
             foreach ($v as $m=>$n){
                 if (is_numeric($m)){
@@ -126,8 +146,12 @@ class SingletonMysql
             $_param[]=$k.' = '.$v;
         }
         $sql='update '.$this->table.' SET '.implode(',',$_param).$this->sql;
-        //self::$db->query()->getColumnMeta()
-        return self::$db->query($sql)->execute();
+        try{
+            return self::$db->query($sql)->execute();
+        }catch (PDOException $exception){
+            die("Error!: " . $exception->getMessage() . "<br/>");
+        }
+
     }
 
     //写入
@@ -142,28 +166,24 @@ class SingletonMysql
             $val[]=$v;
         }
         $sql="insert into "."$this->table  (".implode(',',$key).") values(".implode(',',$val).")";
-        return self::$db->query($sql)->execute();
+
+        try{
+            return self::$db->query($sql)->execute();
+        }catch (PDOException $exception){
+            die("Error!: " . $exception->getMessage() . "<br/>");
+        }
+
     }
 
+    //删除
     public function delete(){
+        $sql='delete from '.$this->table.' '.$this->sql;
+        try{
+            return self::$db->query($sql)->execute();
+        }catch (PDOException $exception){
+            die("Error!: " . $exception->getMessage() . "<br/>");
+        }
 
     }
-
-
-
 }
-//查询某一个列
-$mysql = SingletonMysql::getInstance();
-//$res=$mysql->table('user')->where('username','=','test')->field(['age','sex'])->get();
-//$res=$mysql->table('user')->where('id','in',[1,2])->update(['age'=>55]);
-//print_r($res);
-$res2=$mysql->table('user')->insert([
-    'username'=>'hanmeimei',
-    'age'=>30,
-    'sex'=>3,
-    'create_time'=>time(),
-    'update_time'=>time(),
-    'status'=>1,
-]);
 
-print_r($res2);
