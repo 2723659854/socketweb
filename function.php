@@ -14,3 +14,7 @@ function input(?string $name){
 function app_path(){
     return __DIR__;
 }
+
+function config($path_name){
+    return include app_path().'/config/'.$path_name.'.php';
+}

@@ -1,23 +1,45 @@
 <?php
+
 namespace Model;
+
 use mysqli;
+
 class BaseModel
 {
-    public $value;
     public $mysql;
-    public $list;
     public $sql;
-    public $table;
+    public $table = 'user';
+    protected $host = null;
+    protected $username = null;
+    protected $password = null;
+    protected $dbname = null;
+    protected $port = null;
+    protected $type = 'mysql';
 
 
-    public function __construct($str=null)
+    public function __construct($str = null)
     {
-        $this->value = $str;
-        $mysqli = new mysqli("127.0.0.1", "root", "root", "test", '3306');
+//        $this->value = $str;
+//        $mysqli = new mysqli("127.0.0.1", "root", "root", "test", '3306');
+//        $mysqli->set_charset('utf8');
+//        $this->mysql = $mysqli;
+//        $this->sql=$this->sql."select * from ".$this->table;
+        $config = config('database');
+        $this->type = $config['default'];
+        $database_config = $config[$this->type];
+        $this->host = $database_config['host'];
+        $this->username = $database_config['username'];
+        $this->password = $database_config['passwd'];
+        $this->dbname = $database_config['dbname'];
+        $this->port = $database_config['port'];
+
+        $mysqli = new mysqli($this->host, $this->username, $this->password, $this->dbname, $this->port);
+        //
+        //$mysqli = new mysqli('127.0.0.1', 'root', 'root', 'test', '3306');
+
         $mysqli->set_charset('utf8');
         $this->mysql = $mysqli;
-        $this->sql=$this->sql."select * from ".$this->table;
-
+        $this->sql = $this->sql . "select * from " . $this->table;
     }
 
     public function trim($t)
@@ -34,60 +56,68 @@ class BaseModel
 
     //下面是数据库的链式操作
 
-    public function first(){
+    public function first()
+    {
         return $this->mysql->query($this->sql)->fetch_assoc();
     }
 
-    public function get(){
-        $list=$this->mysql->query($this->sql);
+    public function get()
+    {
+        $list = $this->mysql->query($this->sql);
         $data = [];
         if ($list) {
             while ($myrow = mysqli_fetch_row($list)) {
-                $data[]=$myrow;
+                $data[] = $myrow;
             }
         }
         return $data;
     }
 
-    public function where($name,$logic,$value){
-        $this->sql=$this->sql.' where `'.$name.'` '.$logic.' "'.$value.'"';
-        //print_r($this->sql);
+    public function where($name, $logic, $value)
+    {
+        $this->sql = $this->sql . ' where `' . $name . '` ' . $logic . ' "' . $value . '"';
         return $this;
     }
 
-    public function insert(){
+    public function insert()
+    {
 
     }
 
-    public function save(){
+    public function save()
+    {
 
     }
 
-    public function update(){
+    public function update()
+    {
 
     }
 
-    public function delete(){
+    public function delete()
+    {
 
     }
 
-    public function whereIn(){
+    public function whereIn()
+    {
 
     }
 
     //关闭连接
-    public function close(){
+    public function close()
+    {
         //$this->mysql->close();
     }
 }
 
-//$class=new BaseModel(' SSF');
+$class = new BaseModel(' SSF');
 //echo $class->trim('0')->strlen();
 
 //每一次的查询都必须单独实例化
 //可执行的语句first方法
-//$data=$class ->where('username','=','test') ->first();
-//print_r($data);
+$data = $class->where('username', '=', 'test')->first();
+print_r($data);
 //测试get方法
 //$data2=$class->where('id','>=',1)->get();
 //print_r($data2);
