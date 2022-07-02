@@ -25,17 +25,17 @@ class BaseModel
 
     public function __construct()
     {
-//        $config = config('database');
-//        $this->type = $config['default'];
-//        $database_config = $config[$this->type];
-//        $this->host = $database_config['host'];
-//        $this->username = $database_config['username'];
-//        $this->password = $database_config['passwd'];
-//        $this->dbname = $database_config['dbname'];
-//        $this->port = $database_config['port'];
+        $config = config('database');
+        $this->type = $config['default'];
+        $database_config = $config[$this->type];
+        $this->host = $database_config['host'];
+        $this->username = $database_config['username'];
+        $this->password = $database_config['passwd'];
+        $this->dbname = $database_config['dbname'];
+        $this->port = $database_config['port'];
 
-        //$mysqli = new mysqli($this->host, $this->username, $this->password, $this->dbname, $this->port);
-        $mysqli = new mysqli('127.0.0.1', 'root', 'root', 'test', '3306');
+        $mysqli = new mysqli($this->host, $this->username, $this->password, $this->dbname, $this->port);
+        //$mysqli = new mysqli('127.0.0.1', 'root', 'root', 'test', '3306');
         $mysqli->set_charset('utf8');
         $this->mysql = $mysqli;
         $this->sql = '';
