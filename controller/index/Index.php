@@ -19,7 +19,7 @@ class Index
         }
         $user=new User();
         $data=$user->where('username','=','test')->first();
-        print_r($data);
+        //print_r($data);
         $app_name=config('app')['app_name'];
         return view('index/index',['var'=>$var,'str'=>$str,'user'=>json_encode($data),'app_name'=>$app_name]);
     }
