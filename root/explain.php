@@ -29,6 +29,7 @@ class HttpServer
 
     public function run()
     {
+        //header("Content-Type:text/html;charset=utf-8");
         //将将连接绑定到ip和端口
         socket_bind($this->_socket, $this->ip, $this->port);
         //socket开始监听
@@ -38,7 +39,8 @@ class HttpServer
             //接受socket信息流，监听连接并接受信息流
             $socketAccept = socket_accept($this->_socket);
             //读取信息流
-            $request      = socket_read($socketAccept, 1024);
+            $request      = socket_read($socketAccept, 1024*20);
+            //var_dump($request);
             //向接受的文件写入响应code
             socket_write($socketAccept, 'HTTP/1.1 200 OK' . PHP_EOL);
             //写入时间

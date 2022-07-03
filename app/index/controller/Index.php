@@ -11,17 +11,9 @@ class Index
     }
     //控制器里面写了一个index方法
     public function index(Request $request){
-        print_r($request);
-        if (isset($param['var'])){
-            $var=$param['var'];
-        }else{
-            $var="哈哈哈，模板渲染成功";
-        }
-        if (isset($param['str'])){
-            $str=$param['str'];
-        }else{
-            $str='say hello';
-        }
+        //print_r($request);
+        $var=$request->param('var');
+        $str=$request->param('str');
         $user=new User();
         $data=$user->where('username','=','test')->first();
         $app_name=config('app')['app_name'];
@@ -31,7 +23,7 @@ class Index
     //测试第二个方法和控制器
     public function say(Request $request){
 
-        var_dump($request);
+        //var_dump($request);
         $book=new Book();
         $book->insert([
             'name'=>'哈利波特',
@@ -39,6 +31,16 @@ class Index
             'create_time'=>time(),
             'update_time'=>time(),
         ]);
+        return view('index/say');
+    }
+
+    public function upload(){
+        return view('index/upload');
+    }
+
+    public function store(Request $request){
+        echo "store\r\n";
+        //print_r($request);
         return view('index/say');
     }
 }

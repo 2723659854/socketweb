@@ -4,24 +4,20 @@ namespace Root;
 class Request
 {
 
-    public $value=['name'=>'tome'];
+    public $value=[];
 
     public $_error=null;
+
+    public $header=[];
 
     /**
      * 获取request请求参数
      * @param string $name
      * @return string|string[]|null
      */
-    public function param($name=''){
+    public function param($name='',$default=null){
         if ($name){
-            if (isset($this->value[$name])){
-                return $this->value[$name];
-            }elseif(isset($this->value['header'][$name])){
-                return $this->value['header'][$name];
-            }else{
-                return null;
-            }
+            return array_key_exists($name,$this->value)?$this->value[$name]:$default;
         }else{
             return $this->value;
         }
@@ -34,6 +30,26 @@ class Request
      */
     public function set($key,$value){
         $this->value[$key]=$value;
+    }
+
+    /**
+     * 设置获取header信息
+     * @param string $name
+     * @param null $value
+     * @return mixed|null
+     */
+    public function header($name='',$value=null){
+        if ($value){
+           return $this->header[$name]=$value;
+        }else{
+            return array_key_exists($name,$this->header)?$this->header[$name]:null;
+        }
+
+    }
+
+    //处理文件
+    public function file($name='file'){
+
     }
 
 }

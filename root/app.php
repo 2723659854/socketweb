@@ -30,7 +30,6 @@ foreach (traverse(app_path().'/app') as $key => $val) {
 function handle($url, $param,$_request)
 {
     list($file, $class, $method) = explode('@', $url);
-    //todo 这种都不抛出异常，而是将错误记录然后渲染到一个文件上去
     if (!file_exists($file)) {
         //echo "文件不存在\r\n";
         //throw new Exception($file.'文件不存在');
@@ -51,21 +50,33 @@ function handle($url, $param,$_request)
         //throw new Exception($method.'方法不存在');
         return dispay('index', ['msg' => $method . '方法不存在']);
     }
+    //处理用户请求参数
     global $fuck;
     $fuck=new Root\Request();
-    $_header_param=[];
     foreach ($_request as $k=>$v){
         $v=trim($v);
         if ($v){
             $_pos=strripos($v,": ");
             $key=substr($v,0,$_pos);
             $value=substr($v,$_pos+1,strlen($v));
-            $_header_param[$key]=$value;
+//            if (!$key){
+//                $name=dirname(__DIR__).'/public/'.time().'.png';
+//                $file = fopen($name,"wb");//打开文件准备写入
+//                fwrite($file,$v);//写入
+//                fclose($file);//关闭
+//            }
+            if ($key){
+                $fuck->header($key,$value);
+            }
         }
+
     }
-    $fuck->set('header',$_header_param);
-    //todo 需要一个request类，然后将参数写入到request里面
+    foreach ($param as $k=>$v){
+        $fuck->set($k,$v);
+    }
+    //处理用户请求
     $response=$class->$method($fuck);
+    //返回响应结果
     if ($fuck->_error){
         return $fuck->_error;
     }else{
