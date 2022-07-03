@@ -1,8 +1,9 @@
 <?php
 //控制器中间件，负责根据路由加载对应的类和方法，并传入参数，返回结果
-require_once './function.php';
-require_once './view.php';
-require_once './Request.php';
+require_once __DIR__.'/function.php';
+require_once __DIR__.'./view.php';
+require_once __DIR__.'./Request.php';
+require_once __DIR__.'./BaseModel.php';
 //加载控制器和所有模型,否则无法直接use使用某一个类
 function traverse($path = '.')
 {
@@ -20,37 +21,57 @@ function traverse($path = '.')
     }
     return $filePath;
 }
-//挂载模型
-foreach (traverse(app_path().'/model') as $key => $val) {
-    require_once $val;
-}
-//挂载控制器
-foreach (traverse(app_path().'/controller') as $key => $val) {
+
+//加载所有用户定义的文件
+foreach (traverse(app_path().'/app') as $key => $val) {
     require_once $val;
 }
 
-function handle($url, $param)
+function handle($url, $param,$_request)
 {
     list($file, $class, $method) = explode('@', $url);
     //todo 这种都不抛出异常，而是将错误记录然后渲染到一个文件上去
     if (!file_exists($file)) {
+        //echo "文件不存在\r\n";
         //throw new Exception($file.'文件不存在');
         return dispay('index', ['msg' => $file . '文件不存在']);
     }
     require_once $file;
+    //$class='App\\Controller\\'.$class;
+    //$class='App\\'.'Index'.'\\Controller'.$class;
     if (!class_exists($class)) {
+        //echo "类不存在\r\n";
         //throw new Exception($class.'类不存在');
         return dispay('index', ['msg' => $class . '类不存在']);
     }
     $class = new $class;
+
     if (!method_exists($class, $method)) {
+        //echo "{{$method}}方法不存在\r\n";
         //throw new Exception($method.'方法不存在');
         return dispay('index', ['msg' => $method . '方法不存在']);
     }
-    $fuck=new Request();
-    $fuck->value=['test'=>$param];
+    global $fuck;
+    $fuck=new Root\Request();
+    $_header_param=[];
+    foreach ($_request as $k=>$v){
+        $v=trim($v);
+        if ($v){
+            $_pos=strripos($v,": ");
+            $key=substr($v,0,$_pos);
+            $value=substr($v,$_pos+1,strlen($v));
+            $_header_param[$key]=$value;
+        }
+    }
+    $fuck->set('header',$_header_param);
     //todo 需要一个request类，然后将参数写入到request里面
-    return $class->$method($fuck);
+    $response=$class->$method($fuck);
+    if ($fuck->_error){
+        return $fuck->_error;
+    }else{
+        return $response;
+    }
+
 }
 
 //抛出异常

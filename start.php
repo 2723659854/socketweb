@@ -115,8 +115,8 @@ function say()
 //nginx服务
 function nginx()
 {
-    require_once './explain.php';
-    $httpServer = new HttpServer();
+    require_once __DIR__.'/root/explain.php';
+    $httpServer = new root\HttpServer();
     $httpServer->run();
 }
 

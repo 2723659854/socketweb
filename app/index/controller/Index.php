@@ -1,7 +1,8 @@
 <?php
-use Model\User;
-use Model\Book;
-use Request;
+namespace App\Index\Controller;
+use App\Model\User;
+use App\Model\Book;
+use Root\Request;
 class Index
 {
     //如果需要渲染模板就调用view 不需要渲染模板就不调用view
@@ -23,14 +24,14 @@ class Index
         }
         $user=new User();
         $data=$user->where('username','=','test')->first();
-        //print_r($data);
         $app_name=config('app')['app_name'];
         return view('index/index',['var'=>$var,'str'=>$str,'user'=>json_encode($data),'app_name'=>$app_name]);
     }
 
     //测试第二个方法和控制器
-    public function say(){
+    public function say(Request $request){
 
+        var_dump($request);
         $book=new Book();
         $book->insert([
             'name'=>'哈利波特',

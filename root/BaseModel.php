@@ -1,9 +1,10 @@
 <?php
 
-namespace Model;
+namespace Root;
 
 use mysqli;
-use mysqli_sql_exception;
+use mysqli_sql_exception as MysqlException;
+use Root\Request;
 class BaseModel
 {
 
@@ -23,8 +24,10 @@ class BaseModel
     private $offset=0;
 
 
+
     public function __construct()
     {
+        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
         $config = config('database');
         $this->type = $config['default'];
         $database_config = $config[$this->type];
@@ -34,7 +37,13 @@ class BaseModel
         $this->dbname = $database_config['dbname'];
         $this->port = $database_config['port'];
 
-        $mysqli = new mysqli($this->host, $this->username, $this->password, $this->dbname, $this->port);
+
+        try{
+            $mysqli = new mysqli($this->host, $this->username, $this->password, $this->dbname, $this->port);
+        }catch (MysqlException $e){
+            echo $e->getMessage();
+            die("数据库连接失败！");
+        }
         //$mysqli = new mysqli('127.0.0.1', 'root', 'root', 'test', '3306');
         $mysqli->set_charset('utf8');
         $this->mysql = $mysqli;
@@ -57,8 +66,13 @@ class BaseModel
         }
         $sql='select '.$this->field.' from '.$this->table.' where '.$this->sql.' order by '.$this->order.$limit;
 
-        return $this->mysql->query($sql)->fetch_assoc();
-
+        try{
+            return $this->mysql->query($sql)->fetch_assoc();
+        }catch (MysqlException $e){
+            global $fuck;
+            $fuck->_error=no_declear('index',['msg'=>"错误码：".$e->getCode()."<br>文件：".$e->getFile()."<br>行数：".$e->getLine().PHP_EOL."<br>错误详情：".$e->getMessage()]);
+            return [];
+        }
     }
 
     /**
@@ -73,18 +87,25 @@ class BaseModel
             $limit='';
         }
         $sql='select '.$this->field.' from '.$this->table.' where '.$this->sql.' order by '.$this->order.$limit;
-        $list = $this->mysql->query($sql);
-        $data = [];
-        //返回键值对对象
-        while($row=$list->fetch_object())
-        {
-            $array=[];
-            foreach ($row as $k=>$v){
-                $array[$k]=$v;
+        try{
+            $list = $this->mysql->query($sql);
+            $data = [];
+            //返回键值对对象
+            while($row=$list->fetch_object())
+            {
+                $array=[];
+                foreach ($row as $k=>$v){
+                    $array[$k]=$v;
+                }
+                $data[]=$array;
             }
-            $data[]=$array;
+            return $data;
+        }catch (MysqlException $e){
+
+            echo $e->getMessage();
+            die("数据库操作失败！");
         }
-        return $data;
+
     }
 
 
@@ -164,7 +185,14 @@ class BaseModel
             $val[]=$v;
         }
         $sql="insert into "."$this->table  (".implode(',',$key).") values(".implode(',',$val).")";
-        return $this->mysql->query($sql);
+        try{
+            return $this->mysql->query($sql);
+        }catch (MysqlException $e){
+
+            echo $e->getMessage();
+            die('数据库操作失败');
+        }
+
     }
 
     //update方法
@@ -183,8 +211,13 @@ class BaseModel
             $_param[]=$k.' = '.$v;
         }
         $sql='update '.$this->table.' SET '.implode(',',$_param).$this->sql;
-        return $this->mysql->query($sql);
+        try{
+            return $this->mysql->query($sql);
+        }catch (MysqlException $e){
 
+            echo $e->getMessage();
+            die('数据库操作失败');
+        }
     }
 
 
@@ -196,7 +229,13 @@ class BaseModel
      */
     public function delete(){
         $sql='delete from '.$this->table.' '.$this->sql;
-        return $this->mysql->query($sql);
+        try{
+            return $this->mysql->query($sql);
+        }catch (MysqlException $e){
+
+            echo $e->getMessage();
+            die('数据库操作失败');
+        }
     }
 
     //排序

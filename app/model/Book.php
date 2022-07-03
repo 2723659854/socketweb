@@ -1,6 +1,6 @@
 <?php
-namespace Model;
-
+namespace App\Model;
+use Root\BaseModel;
 class Book extends BaseModel
 {
     //use SingletonMysql;
