@@ -23,6 +23,8 @@ class HttpServer
             die(socket_strerror(socket_last_error($this->_socket)));
         }
         //echo "实例化成功\r\n";
+        global $_port;
+        $this->port=$_port;
     }
 
     public function run()
@@ -31,6 +33,7 @@ class HttpServer
         socket_bind($this->_socket, $this->ip, $this->port);
         //socket开始监听
         socket_listen($this->_socket, 5);
+        echo "启动成功\r\n";
         //这里通过一个死循环达到常驻内存的效果
         while (true) {
             //接受socket信息流，监听连接并接受信息流

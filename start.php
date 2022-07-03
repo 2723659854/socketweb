@@ -4,17 +4,24 @@
  * @date 2022年6月30日18:10:56
  * @description php守护进程模式运行原理
  * */
-$param     = $argv;
+$param = $argv;
 $daemonize = false;//是否已守护进程模式运行
-$flag      = true;//是否结束脚本运行
-global $pid_file, $log_file;
-$httpServer=null;
-$need_close=false;//是否需要关闭进程
+$flag = true;//是否结束脚本运行
+global $pid_file, $log_file, $_port,$_listen;
+$server = include __DIR__ . '/config/server.php';
+if (isset($server['port']) && $server['port']) {
+    $_port = intval($server['port']);
+} else {
+    $_port = 8020;
+}
+$_listen="http://127.0.0.1:".$_port;
+$httpServer = null;
+$need_close = false;//是否需要关闭进程
 $pid_file = './my_pid.txt';//pid存放文件
 $log_file = './log.txt';//业务逻辑存放文件
 //检测是否是windows运行环境
 $system = true;//Linux系统
-$httpServer=null;
+$httpServer = null;
 if (\DIRECTORY_SEPARATOR === '\\') {
     $system = false;//windows系统
 }
@@ -72,13 +79,13 @@ if ($flag == false) {
 //这里有一个很诡异的问题，就是必须检查文件必须写在上面，可能是执行顺序的问题，也可能是读取文件的速度问题导致的，如果调用方法会报错
 //这里必须强制检查是否已有脚本在运行，而且必须单独写在这上面，因为php执行顺序是从上到下，这里如果写方法，
 //就会一直往下执行然后找对应的方法，执行了启动http服务后再检查，这个时候就会报错说端口已经被使用
-if (true){
+if (true) {
     //检测是否正在运行，如果正在运行则不可以再开一个进程，防止修改代码后，原来的项目还在运行，导致不生效，
     $fd = fopen('./lock.txt', 'w');
     //这里必须是非阻塞写入，否则进程一直挂在这里不动了
     $res = flock($fd, LOCK_EX | LOCK_NB);
     if (!$res) {
-        echo "http://127.0.0.1:8020\r\n";
+        echo $_listen."\r\n";
         echo "已有脚本正在运行，请勿重复启动，你可以使用stop停止运行或者使用restart重启\r\n";
         exit(0);
     }
@@ -88,7 +95,7 @@ if (true){
 if ($daemonize) {
     daemon();
 } else {
-    echo "http://127.0.0.1:8020\r\n";
+    echo $_listen."\r\n";
     echo "进程启动完成,你可以按ctrl+c停止运行\r\n";
     nginx();
 }
@@ -106,11 +113,13 @@ function say()
 }
 
 //nginx服务
-function  nginx(){
+function nginx()
+{
     require_once './explain.php';
-    $httpServer=new HttpServer();
+    $httpServer = new HttpServer();
     $httpServer->run();
 }
+
 //以守护进程模式运行
 function daemon()
 {
@@ -123,7 +132,8 @@ function daemon()
         throw new Exception('Fork fail');
     } elseif ($pid > 0) {
         //必须在主进程结束前打印，否则控制台被关闭后看不到
-        echo "http://127.0.0.1:8020\r\n";
+        global $_listen;
+        echo $_listen."\r\n";
         echo "进程启动完成,你可以输入php start.php stop停止运行\r\n";
         //关闭主进程
         exit(0);
@@ -148,8 +158,10 @@ function daemon()
         exit(0);
     }
 }
+
 //关闭运行的进程
-function close(){
+function close()
+{
     echo "关闭进程中...\r\n";
     global $pid_file;
     if (file_exists($pid_file)) {
@@ -163,14 +175,16 @@ function close(){
 }
 
 //环境依赖检测
-function check_env(){
+function check_env()
+{
     if (!extension_loaded('sockets')) {
         exit("请先安装sockets扩展，然后开启php.ini的sockets扩展");
     }
 }
 
 //这里采用文件添加独占锁的形式，如果一个进程在后台运行，这个文件被占用了，这个脚本就不能往下执行了，只有这个进程被关闭后才会被释放
-function check_run(){
+function check_run()
+{
     //不仅daemon模式检查是否已经运行，
     $fd = fopen('./lock.txt', 'w');
     //这里必须是非阻塞写入，否则进程一直挂在这里不动了
