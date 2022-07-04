@@ -31,6 +31,7 @@ function handle($url, $param,$_request)
 {
     list($file, $class, $method) = explode('@', $url);
     $file=app_path().$file;
+    var_dump($file);
     if (!file_exists($file)) {
         //echo "文件不存在\r\n";
         //throw new Exception($file.'文件不存在');
