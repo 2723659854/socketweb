@@ -53,7 +53,7 @@ class HttpServer
                 $str1= substr($need_str,stripos($need_str,$part)+$part_length);
                 $str2=substr($str1,0,stripos($str1,$part_end));
                 $param1=array_filter(explode(PHP_EOL,$str2));
-                echo "拆分参数后的数组\r\n"
+                echo "拆分参数后的数组\r\n";
                 print_r($param1);
                 $key=str_replace('"','',$param1[0]);
                 $key=str_replace('"','',$key);

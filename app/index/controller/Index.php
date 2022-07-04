@@ -41,12 +41,12 @@ class Index
     public function store(Request $request){
         //echo "store\r\n";
         var_dump($request->value);
-        foreach ($request->value as $k=>$v){
+        /*foreach ($request->value as $k=>$v){
             echo $k;
             echo "\r\n";
             echo $v;
             echo "\r\n";
-        }
+        }*/
 
         $file=$request->param('file');
         return view('index/say',['file'=>$file]);
