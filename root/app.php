@@ -68,7 +68,7 @@ function handle($url, $param,$_request)
 
     }
 
-    var_dump($param);
+    print_r($param);
     foreach ($param as $k=>$v){
         $fuck->set($k,$v);
     }
