@@ -40,7 +40,8 @@ class Index
 
     public function store(Request $request){
         //echo "store\r\n";
-        print_r($request['file']);
+        var_dump($request);
+        print_r($request->param('file'));
         return view('index/say');
     }
 
