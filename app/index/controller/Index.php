@@ -11,7 +11,7 @@ class Index
     }
     //控制器里面写了一个index方法
     public function index(Request $request){
-        //print_r($request);
+        print_r($request);
         $var=$request->param('var');
         $str=$request->param('str');
         $user=new User();
