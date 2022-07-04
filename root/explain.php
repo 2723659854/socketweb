@@ -40,7 +40,22 @@ class HttpServer
             $socketAccept = socket_accept($this->_socket);
             //读取信息流
             $request      = socket_read($socketAccept, 1024*20);
-            //var_dump($request);
+            //todo  解析post提交的参数
+            $part="form-data; name=";
+            $part_length=strlen($part);
+            $part_end="------WebKitFormBoundary";
+            $part_end_length=strlen($part_end);
+            $need_str=$request;
+            $_param=[];
+            while (stripos($need_str,$part)){
+                $str1= substr($need_str,stripos($need_str,$part)+$part_length);
+                $str2=substr($str1,0,stripos($str1,$part_end));
+                $param1=array_filter(explode(PHP_EOL,$str2));
+                $_param[]=[str_replace('"','',$param1[0])=>str_replace('"','',$param1[2])];
+                $str3=substr($str1,stripos($str1,$part_end)+$part_end_length);
+                $need_str=$str3;
+            }
+            //var_dump($_param);
             //向接受的文件写入响应code
             socket_write($socketAccept, 'HTTP/1.1 200 OK' . PHP_EOL);
             //写入时间
@@ -85,14 +100,14 @@ class HttpServer
                         $request_url=explode('?',$url);
                         $route=$request_url[0];
                         $params=explode('&',$request_url[1]);
-                        $_param=[];
+
                         foreach ($params as $k=>$v){
                             $_v=explode('=',$v);
                             $_param[$_v[0]]=$_v['1'];
                         }
                         $content=handle(route($route),$_param,$_request);
                     }else{
-                        $content=handle(route($url),[],$_request);
+                        $content=handle(route($url),$_param,$_request);
                     }
                     socket_write($socketAccept, 'Content-Type: text/html' . PHP_EOL);
                     socket_write($socketAccept, '' . PHP_EOL);
