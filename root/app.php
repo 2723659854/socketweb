@@ -27,8 +27,9 @@ foreach (traverse(app_path().'/app') as $key => $val) {
     require_once $val;
 }
 
-function handle($url, $param,$_request)
+function handle($url, $param,$_request,$momo_lady)
 {
+    print_r($momo_lady);
     list($file, $class, $method) = explode('@', $url);
     $file=app_path().$file;
     //var_dump($file);

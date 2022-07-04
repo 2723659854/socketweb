@@ -91,6 +91,7 @@ class HttpServer
                     break;
                 default:
                     //todo linux 会丢失数据,真鸡儿难搞
+                    $momo_lady=[];
                     while (stripos($need_str,$part)){
                         $str1= substr($need_str,stripos($need_str,$part)+$part_length);
                         $str2=substr($str1,0,stripos($str1,$part_end));
@@ -101,11 +102,7 @@ class HttpServer
                                 $array[]=$b;
                             }
                         }
-
-                        print_r($array);
-
-                        echo ';----------------------我是华丽的分割线--------------------';
-                        echo "\r\n";
+                        $momo_lady[]=$array;
                         $str3=substr($str1,stripos($str1,$part_end)+$part_end_length);
                         $need_str=$str3;
                     }
@@ -122,9 +119,9 @@ class HttpServer
                             $_v=explode('=',$v);
                             $_param[$_v[0]]=$_v['1'];
                         }
-                        $content=handle(route($route),$_param,$_request);
+                        $content=handle(route($route),$_param,$_request,$momo_lady);
                     }else{
-                        $content=handle(route($url),$_param,$_request);
+                        $content=handle(route($url),$_param,$_request,$momo_lady);
                     }
                     socket_write($socketAccept, 'Content-Type: text/html' . PHP_EOL);
                     socket_write($socketAccept, '' . PHP_EOL);
