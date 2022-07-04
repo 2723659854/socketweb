@@ -39,7 +39,8 @@ class HttpServer
             //接受socket信息流，监听连接并接受信息流
             $socketAccept = socket_accept($this->_socket);
             //读取信息流
-            $request      = socket_read($socketAccept, 1024*20);
+            $request      = socket_read($socketAccept, 1024*20000);
+            var_dump($request);
             //todo  解析post提交的参数
             $part="form-data; name=";
             $part_length=strlen($part);
@@ -111,7 +112,7 @@ class HttpServer
                     }
                     socket_write($socketAccept, 'Content-Type: text/html' . PHP_EOL);
                     socket_write($socketAccept, '' . PHP_EOL);
-                    socket_write($socketAccept, $content, 1024);
+                    socket_write($socketAccept, $content, strlen($content));
 
 
             }
