@@ -42,7 +42,8 @@ class Index
         //echo "store\r\n";
         var_dump($request->param('file'));
 
-        return view('index/say');
+        $file=$request->param('file');
+        return view('index/say',['file'=>$file]);
     }
 
     public function book(){
