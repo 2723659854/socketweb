@@ -52,15 +52,19 @@ class HttpServer
             while (stripos($need_str,$part)){
                 $str1= substr($need_str,stripos($need_str,$part)+$part_length);
                 $str2=substr($str1,0,stripos($str1,$part_end));
-                $param1=array_filter(explode(PHP_EOL,$str2));
-                echo "拆分参数后的数组\r\n";
-                print_r($param1);
-                $key=str_replace('"','',$param1[0]);
+                $param1=explode(PHP_EOL,$str2);
+                $_new_param=[];
+                foreach ($param1 as $a=>$b){
+                    if (trim($b)){
+                        $_new_param[]=$b;
+                    }
+                }
+                $key=str_replace('"','',$_new_param[0]);
                 $key=str_replace('"','',$key);
-                $value=str_replace('"','',$param1[2]);
+                $value=str_replace('"','',$_new_param[1]);
                 $value=str_replace('"','',$value);
 
-                //echo $key.'-------'.$value."\r\n";
+                echo $key.'-------'.$value."\r\n";
                 $_param[$key]=$value;
                 $str3=substr($str1,stripos($str1,$part_end)+$part_end_length);
                 $need_str=$str3;
