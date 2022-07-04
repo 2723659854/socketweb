@@ -49,30 +49,6 @@ class HttpServer
             $part_end_length=strlen($part_end);
             $need_str=$request;
             $_param=[];
-            $fuck_param=[];
-            while (stripos($need_str,$part)){
-                $str1= substr($need_str,stripos($need_str,$part)+$part_length);
-                $str2=substr($str1,0,stripos($str1,$part_end));
-                $param1=explode(PHP_EOL,$str2);
-                $_new_param=[];
-                foreach ($param1 as $a=>$b){
-                    if (trim($b)){
-                        $_new_param[]=$b;
-                    }
-                }
-                //print_r($_new_param);
-//                $key=str_replace('"','',$_new_param[0]);
-//                $key=str_replace('"','',$key);
-//                $value=str_replace('"','',$_new_param[1]);
-//                $value=str_replace('"','',$value);
-
-                //echo $key.'-------'.$value."\r\n";
-                $fuck_param[$_new_param[0]]=$_new_param[1];
-                $str3=substr($str1,stripos($str1,$part_end)+$part_end_length);
-                $need_str=$str3;
-            }
-
-            print_r( $fuck_param);
             //向接受的文件写入响应code
             socket_write($socketAccept, 'HTTP/1.1 200 OK' . PHP_EOL);
             //写入时间
@@ -114,6 +90,20 @@ class HttpServer
                     socket_write($socketAccept, $fileContent, strlen($fileContent));
                     break;
                 default:
+                    while (stripos($need_str,$part)){
+                        $str1= substr($need_str,stripos($need_str,$part)+$part_length);
+                        $str2=substr($str1,0,stripos($str1,$part_end));
+                        $param1=explode(PHP_EOL,$str2);
+                        $_new_param=[];
+                        foreach ($param1 as $a=>$b){
+                            if (trim($b)){
+                                $_new_param[]=$b;
+                            }
+                        }
+                        $_param[$_new_param[0]]=$_new_param[1];
+                        $str3=substr($str1,stripos($str1,$part_end)+$part_end_length);
+                        $need_str=$str3;
+                    }
                     //其他类型的都默认为php类型文件，需要php文件解释
                     //非静态资源文件解析路由和参数
                     //解析get路由里面的参数
