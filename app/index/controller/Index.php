@@ -17,7 +17,7 @@ class Index
         $user=new User();
         $data=$user->where('username','=','test')->first();
         $app_name=config('app')['app_name'];
-        return view('index/index',['var'=>$var,'str'=>$str,'user'=>json_encode($data),'app_name'=>$app_name]);
+        return view('index/index',['var'=>$var,'str'=>date('Y-m-d H:i:s'),'user'=>json_encode($data),'app_name'=>$app_name]);
     }
 
     //测试第二个方法和控制器
