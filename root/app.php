@@ -29,7 +29,7 @@ foreach (traverse(app_path().'/app') as $key => $val) {
 
 function handle($url, $param,$_request,$momo_lady)
 {
-    print_r($momo_lady);
+
     list($file, $class, $method) = explode('@', $url);
     $file=app_path().$file;
     //var_dump($file);
@@ -72,6 +72,9 @@ function handle($url, $param,$_request,$momo_lady)
 
     foreach ($param as $k=>$v){
         $fuck->set($k,$v);
+    }
+    foreach ($momo_lady as $k=>$v){
+        $fuck->set($v[0],$v[1]);
     }
     //处理用户请求
     $response=$class->$method($fuck);
