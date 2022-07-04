@@ -40,7 +40,7 @@ class BaseModel
 
         try{
             //$mysqli = new mysqli($this->host, $this->username, $this->password, $this->dbname, $this->port);
-            $mysqli = new mysqli('127.0.0.1', 'root', 'root', 'test', '3306');
+            $mysqli = new mysqli('122.51.99.152', 'root', 'root', 'test', '3306');
         }catch (MysqlException $e){
             echo $e->getMessage();
             die("数据库连接失败！");
