@@ -69,6 +69,7 @@ function handle($url, $param,$_request)
     }
 
     foreach ($param as $k=>$v){
+        echo $k.'----'.$v."\r\n";
         $fuck->set($k,$v);
     }
     //处理用户请求
