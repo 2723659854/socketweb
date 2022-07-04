@@ -95,14 +95,17 @@ class HttpServer
                         $str1= substr($need_str,stripos($need_str,$part)+$part_length);
                         $str2=substr($str1,0,stripos($str1,$part_end));
                         $param1=explode(PHP_EOL,$str2);
-                        $_new_param=[];
+                        $array=[];
                         foreach ($param1 as $a=>$b){
                             if (trim($b)){
-                                $_new_param[]=$b;
+                                $array[]=$b;
                             }
                         }
 
-                        print_r($_new_param);
+                        print_r($array[0]);
+                        echo "\r\n";
+                        print_r($array[1]);
+                        echo "\r\n";
                         $str3=substr($str1,stripos($str1,$part_end)+$part_end_length);
                         $need_str=$str3;
                     }
