@@ -27,7 +27,7 @@ class HttpServer
         $this->port=$_port;
     }
 
-    public function run()
+    public function run12()
     {
         //header("Content-Type:text/html;charset=utf-8");
         //将将连接绑定到ip和端口
@@ -64,6 +64,7 @@ class HttpServer
             socket_write($socketAccept, 'HTTP/1.1 200 OK' . PHP_EOL);
             //写入时间
             socket_write($socketAccept, 'Date:' . date('Y-m-d H:i:s') . PHP_EOL);
+
             //解析用户访问的文件
             $_mark=$this->getUri($request);
             $fileName = $_mark['file'];
@@ -122,9 +123,26 @@ class HttpServer
 
 
             }
-            //socket_write($socketAccept, "\r\n welcome to  php server", 100);
+            socket_write($socketAccept, "\r\n welcome to  php server", 100);
             socket_close($socketAccept);
 
+        }
+
+    }
+
+    public function run()
+    {
+        //header("Content-Type:text/html;charset=utf-8");
+        //将将连接绑定到ip和端口
+        socket_bind($this->_socket, $this->ip, $this->port);
+        //socket开始监听
+        socket_listen($this->_socket, 5);
+        //这里通过一个死循环达到常驻内存的效果
+        while (true) {
+            //接受socket信息流，监听连接并接受信息流
+            $socketAccept = socket_accept($this->_socket);
+            socket_write($socketAccept, "\r\n welcome to  php server", 100);
+            socket_close($socketAccept);
         }
 
     }
