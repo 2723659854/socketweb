@@ -39,7 +39,7 @@ class Index
     }
 
     public function store(Request $request){
-        echo "store\r\n";
+        //echo "store\r\n";
         print_r($request);
         return view('index/say');
     }

@@ -5,6 +5,7 @@
  * @description php守护进程模式运行原理
  * */
 $param = $argv;
+ini_set('memory_limit',-1);
 $daemonize = false;//是否已守护进程模式运行
 $flag = true;//是否结束脚本运行
 global $pid_file, $log_file, $_port,$_listen;

@@ -38,9 +38,10 @@ class HttpServer
         while (true) {
             //接受socket信息流，监听连接并接受信息流
             $socketAccept = socket_accept($this->_socket);
+
             //读取信息流
-            $request      = socket_read($socketAccept, 1024*20000);
-            var_dump($request);
+            $request      = socket_read($socketAccept, 2097152);
+            var_dump(($request));
             //todo  解析post提交的参数
             $part="form-data; name=";
             $part_length=strlen($part);
@@ -52,11 +53,13 @@ class HttpServer
                 $str1= substr($need_str,stripos($need_str,$part)+$part_length);
                 $str2=substr($str1,0,stripos($str1,$part_end));
                 $param1=array_filter(explode(PHP_EOL,$str2));
-                $_param[]=[str_replace('"','',$param1[0])=>str_replace('"','',$param1[2])];
+                $key=str_replace('"','',$param1[0]);
+                $value=str_replace('"','',$param1[2]);
+                $_param[$key]=$value;
                 $str3=substr($str1,stripos($str1,$part_end)+$part_end_length);
                 $need_str=$str3;
             }
-            //var_dump($_param);
+
             //向接受的文件写入响应code
             socket_write($socketAccept, 'HTTP/1.1 200 OK' . PHP_EOL);
             //写入时间
