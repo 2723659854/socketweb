@@ -55,14 +55,13 @@ class HttpServer
                 $param1=array_filter(explode(PHP_EOL,$str2));
                 $key=str_replace('"','',$param1[0]);
                 $value=str_replace('"','',$param1[2]);
-                echo $key;
-                echo "\r\n";
+
                 $_param[$key]=$value;
                 $str3=substr($str1,stripos($str1,$part_end)+$part_end_length);
                 $need_str=$str3;
             }
 
-            //var_dump($_param);
+            print_r($_param);
             //向接受的文件写入响应code
             socket_write($socketAccept, 'HTTP/1.1 200 OK' . PHP_EOL);
             //写入时间
