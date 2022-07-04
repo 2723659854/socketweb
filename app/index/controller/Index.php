@@ -43,4 +43,9 @@ class Index
         print_r($request);
         return view('index/say');
     }
+
+    public function book(){
+        echo 234234;
+        return '333';
+    }
 }
