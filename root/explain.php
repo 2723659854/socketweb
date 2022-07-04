@@ -90,6 +90,7 @@ class HttpServer
                     socket_write($socketAccept, $fileContent, strlen($fileContent));
                     break;
                 default:
+                    //todo linux 会丢失数据,真鸡儿难搞
                     while (stripos($need_str,$part)){
                         $str1= substr($need_str,stripos($need_str,$part)+$part_length);
                         $str2=substr($str1,0,stripos($str1,$part_end));
@@ -100,12 +101,12 @@ class HttpServer
                                 $_new_param[]=$b;
                             }
                         }
-                        $mmlay=implode('=',$_new_param);
-                        print_r($mmlay);
+
+                        print_r($_new_param);
                         $str3=substr($str1,stripos($str1,$part_end)+$part_end_length);
                         $need_str=$str3;
                     }
-                    print_r($_param);
+
                     //其他类型的都默认为php类型文件，需要php文件解释
                     //非静态资源文件解析路由和参数
                     //解析get路由里面的参数
