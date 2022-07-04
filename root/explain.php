@@ -105,6 +105,8 @@ class HttpServer
                         print_r($array[0]);
                         echo "\r\n";
                         print_r($array[1]);
+
+                        echo ';----------------------我是华丽的分割线--------------------';
                         echo "\r\n";
                         $str3=substr($str1,stripos($str1,$part_end)+$part_end_length);
                         $need_str=$str3;
