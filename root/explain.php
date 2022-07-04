@@ -60,6 +60,7 @@ class HttpServer
                 $need_str=$str3;
             }
 
+            var_dump($_param);
             //向接受的文件写入响应code
             socket_write($socketAccept, 'HTTP/1.1 200 OK' . PHP_EOL);
             //写入时间
