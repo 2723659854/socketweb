@@ -59,19 +59,19 @@ class HttpServer
                         $_new_param[]=$b;
                     }
                 }
-                print_r($_new_param);
-                $key=str_replace('"','',$_new_param[0]);
-                $key=str_replace('"','',$key);
-                $value=str_replace('"','',$_new_param[1]);
-                $value=str_replace('"','',$value);
+                //print_r($_new_param);
+//                $key=str_replace('"','',$_new_param[0]);
+//                $key=str_replace('"','',$key);
+//                $value=str_replace('"','',$_new_param[1]);
+//                $value=str_replace('"','',$value);
 
                 //echo $key.'-------'.$value."\r\n";
-                $_param[$key]=$value;
+                $_param[$_new_param[0]]=$_new_param[1];
                 $str3=substr($str1,stripos($str1,$part_end)+$part_end_length);
                 $need_str=$str3;
             }
 
-            //print_r($_param);
+            print_r($_param);
             //向接受的文件写入响应code
             socket_write($socketAccept, 'HTTP/1.1 200 OK' . PHP_EOL);
             //写入时间
