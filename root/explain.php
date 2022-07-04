@@ -40,7 +40,7 @@ class HttpServer
             $socketAccept = socket_accept($this->_socket);
 
             //读取信息流
-            $request      = socket_read($socketAccept, 1024);
+            $request      = socket_read($socketAccept, 1024*5);
             //var_dump(($request));
             // 解析post提交的参数
             $part="form-data; name=";
@@ -123,7 +123,7 @@ class HttpServer
 
 
             }
-            socket_write($socketAccept, "\r\n welcome to  php server", 100);
+            //socket_write($socketAccept, "\r\n welcome to  php server", 100);
             socket_close($socketAccept);
 
         }
@@ -151,12 +151,25 @@ class HttpServer
     {
         $arrayRequest = explode(PHP_EOL, $request);
         $line         = $arrayRequest[0];
+
         //这一段正则规则在windows下面生效，在Linux下不生效
         //$url         = trim(preg_replace('/(\w+)\s\/(.*)\sHTTP\/1.1/i', '$2', $line));
         //$method         = trim(preg_replace('/(\w+)\s\/(.*)\sHTTP\/1.1/i', '$1', $line));
-        $_line=explode(' ',$line);
-        $url=$_line[1];
-        $method=$line[0];
+        $str=$line.' ';
+        $length=strlen($str);
+        static $fuck='';
+        $array=[];
+        for($i=0;$i<$length;$i++){
+            if (trim($str[$i])){
+                $fuck=$fuck.$str[$i];
+            }else{
+                $array[]=$fuck;
+                $fuck='';
+            }
+        }
+        $fuck='';
+        $url=$array[1];
+        $method=$array[0];
         //其他的参数，都拆分成数组
         unset($arrayRequest[0]);
         foreach ($arrayRequest as $k=>$v){
