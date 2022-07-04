@@ -74,7 +74,7 @@ function handle($url, $param,$_request,$momo_lady)
         $fuck->set($k,$v);
     }
     foreach ($momo_lady as $k=>$v){
-        $fuck->set($v[0],$v[1]);
+        var_dump($v);
     }
     //处理用户请求
     $response=$class->$method($fuck);
