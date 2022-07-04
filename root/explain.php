@@ -144,7 +144,6 @@ class HttpServer
             socket_write($socketAccept, "\r\n welcome to  php server", 100);
             socket_close($socketAccept);
         }
-
     }
 
     //解析路由
@@ -152,9 +151,12 @@ class HttpServer
     {
         $arrayRequest = explode(PHP_EOL, $request);
         $line         = $arrayRequest[0];
-        $url         = trim(preg_replace('/(\w+)\s\/(.*)\sHTTP\/1.1/i', '$2', $line));
-        var_dump($url);
-        $method         = trim(preg_replace('/(\w+)\s\/(.*)\sHTTP\/1.1/i', '$1', $line));
+        //这一段正则规则在windows下面生效，在Linux下不生效
+        //$url         = trim(preg_replace('/(\w+)\s\/(.*)\sHTTP\/1.1/i', '$2', $line));
+        //$method         = trim(preg_replace('/(\w+)\s\/(.*)\sHTTP\/1.1/i', '$1', $line));
+        $_line=explode(' ',$line);
+        $url=$_line[1];
+        $method=$line[0];
         //其他的参数，都拆分成数组
         unset($arrayRequest[0]);
         foreach ($arrayRequest as $k=>$v){
