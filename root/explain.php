@@ -55,8 +55,8 @@ class HttpServer
                 $param1=array_filter(explode(PHP_EOL,$str2));
                 $key=str_replace('"','',$param1[0]);
                 $value=str_replace('"','',$param1[2]);
-                var_dump($key);
-                var_dump($value);
+                echo $key;
+                echo "\r\n";
                 $_param[$key]=$value;
                 $str3=substr($str1,stripos($str1,$part_end)+$part_end_length);
                 $need_str=$str3;
