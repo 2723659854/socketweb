@@ -100,10 +100,11 @@ class HttpServer
                                 $_new_param[]=$b;
                             }
                         }
-                        $_param[$_new_param[0]]=$_new_param[1];
+                        $_param[$_new_param[0].'']=$_new_param[1];
                         $str3=substr($str1,stripos($str1,$part_end)+$part_end_length);
                         $need_str=$str3;
                     }
+                    print_r($_param);
                     //其他类型的都默认为php类型文件，需要php文件解释
                     //非静态资源文件解析路由和参数
                     //解析get路由里面的参数
