@@ -153,6 +153,7 @@ class HttpServer
         $arrayRequest = explode(PHP_EOL, $request);
         $line         = $arrayRequest[0];
         $url         = trim(preg_replace('/(\w+)\s\/(.*)\sHTTP\/1.1/i', '$2', $line));
+        var_dump($url);
         $method         = trim(preg_replace('/(\w+)\s\/(.*)\sHTTP\/1.1/i', '$1', $line));
         //其他的参数，都拆分成数组
         unset($arrayRequest[0]);

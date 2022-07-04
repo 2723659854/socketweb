@@ -3,7 +3,7 @@
 //定义路由解析规则
 //todo 这里就要求类文件和类名必须大写
 function route($url){
-    var_dump($url);
+    //var_dump($url);
     //首先拆分路由
     $url=array_filter(explode('/',$url));
 
@@ -11,7 +11,7 @@ function route($url){
     foreach ($url as $k=>$v){
         $new_url[]=$v;
     }
-    var_dump($new_url);
+    //var_dump($new_url);
     $num=count($new_url);
     switch ($num){
         case 0:
