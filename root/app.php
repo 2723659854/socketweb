@@ -76,14 +76,14 @@ function handle($url, $param,$_request,$momo_lady)
     foreach ($momo_lady as $k=>$v){
         $str=$v[0];
         $length=strlen($str);
-        static $fuck='';
+        static $fucks='';
         $array=[];
         for($i=0;$i<$length;$i++){
             if (trim($str[$i])){
-                $fuck=$fuck.$str[$i];
+                $fucks=$fucks.$str[$i];
             }else{
                 $array[]=$fuck;
-                $fuck='';
+                $fucks='';
             }
         }
         print_r($array);
