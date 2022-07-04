@@ -49,6 +49,7 @@ class HttpServer
             $part_end_length=strlen($part_end);
             $need_str=$request;
             $_param=[];
+            $fuck_param=[];
             while (stripos($need_str,$part)){
                 $str1= substr($need_str,stripos($need_str,$part)+$part_length);
                 $str2=substr($str1,0,stripos($str1,$part_end));
@@ -66,12 +67,12 @@ class HttpServer
 //                $value=str_replace('"','',$value);
 
                 //echo $key.'-------'.$value."\r\n";
-                $_param[$_new_param[0]]=$_new_param[1];
+                $fuck_param[$_new_param[0]]=$_new_param[1];
                 $str3=substr($str1,stripos($str1,$part_end)+$part_end_length);
                 $need_str=$str3;
             }
 
-            print_r($_param);
+            print_r( $fuck_param);
             //向接受的文件写入响应code
             socket_write($socketAccept, 'HTTP/1.1 200 OK' . PHP_EOL);
             //写入时间
