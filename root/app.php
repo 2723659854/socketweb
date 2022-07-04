@@ -61,18 +61,13 @@ function handle($url, $param,$_request)
             $_pos=strripos($v,": ");
             $key=substr($v,0,$_pos);
             $value=substr($v,$_pos+1,strlen($v));
-//            if (!$key){
-//                $name=dirname(__DIR__).'/public/'.time().'.png';
-//                $file = fopen($name,"wb");//打开文件准备写入
-//                fwrite($file,$v);//写入
-//                fclose($file);//关闭
-//            }
             if ($key){
                 $fuck->header($key,$value);
             }
         }
 
     }
+    print_r($param);
     foreach ($param as $k=>$v){
         $fuck->set($k,$v);
     }
