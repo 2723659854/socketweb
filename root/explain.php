@@ -102,9 +102,7 @@ class HttpServer
                             }
                         }
 
-                        print_r($array[0]);
-                        echo "\r\n";
-                        print_r($array[1]);
+                        print_r($array);
 
                         echo ';----------------------我是华丽的分割线--------------------';
                         echo "\r\n";
