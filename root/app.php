@@ -1,9 +1,9 @@
 <?php
 //控制器中间件，负责根据路由加载对应的类和方法，并传入参数，返回结果
 require_once __DIR__.'/function.php';
-require_once __DIR__.'./view.php';
-require_once __DIR__.'./Request.php';
-require_once __DIR__.'./BaseModel.php';
+require_once __DIR__.'/view.php';
+require_once __DIR__.'/Request.php';
+require_once __DIR__.'/BaseModel.php';
 //加载控制器和所有模型,否则无法直接use使用某一个类
 function traverse($path = '.')
 {
