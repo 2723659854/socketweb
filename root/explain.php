@@ -58,6 +58,7 @@ class HttpServer
                 $value=str_replace('"','',$param1[2]);
                 $value=str_replace('"','',$value);
 
+                echo $key.'-------'.$value."\r\n";
                 $_param[$key]=$value;
                 $str3=substr($str1,stripos($str1,$part_end)+$part_end_length);
                 $need_str=$str3;
