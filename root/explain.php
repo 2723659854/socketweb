@@ -59,12 +59,13 @@ class HttpServer
                         $_new_param[]=$b;
                     }
                 }
+                print_r($_new_param);
                 $key=str_replace('"','',$_new_param[0]);
                 $key=str_replace('"','',$key);
                 $value=str_replace('"','',$_new_param[1]);
                 $value=str_replace('"','',$value);
 
-                echo $key.'-------'.$value."\r\n";
+                //echo $key.'-------'.$value."\r\n";
                 $_param[$key]=$value;
                 $str3=substr($str1,stripos($str1,$part_end)+$part_end_length);
                 $need_str=$str3;
