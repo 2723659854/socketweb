@@ -25,8 +25,9 @@ function view($path,$param=[]){
         //变量检查和渲染
         foreach ($array as $k=>$v){
             if (array_key_exists($v,$new_param)){
-                var_dump($v);
-                var_dump($new_param[$v]);
+                if ($new_param[$v]==null){
+                    $new_param[$v]='';
+                }
                 $content=str_replace($v,$new_param[$v],$content);
             }else{
                 //throw new Exception("未定义的变量".$v);
