@@ -18,8 +18,8 @@ if (isset($server['port']) && $server['port']) {
 $_listen="http://127.0.0.1:".$_port;
 $httpServer = null;
 $need_close = false;//是否需要关闭进程
-$pid_file = './my_pid.txt';//pid存放文件
-$log_file = './log.txt';//业务逻辑存放文件
+$pid_file = '/my_pid.txt';//pid存放文件
+$log_file = '/log.txt';//业务逻辑存放文件
 //检测是否是windows运行环境
 $system = true;//Linux系统
 $httpServer = null;
@@ -82,7 +82,7 @@ if ($flag == false) {
 //就会一直往下执行然后找对应的方法，执行了启动http服务后再检查，这个时候就会报错说端口已经被使用
 if (true) {
     //检测是否正在运行，如果正在运行则不可以再开一个进程，防止修改代码后，原来的项目还在运行，导致不生效，
-    $fd = fopen('./lock.txt', 'w');
+    $fd = fopen('/lock.txt', 'w');
     //这里必须是非阻塞写入，否则进程一直挂在这里不动了
     $res = flock($fd, LOCK_EX | LOCK_NB);
     if (!$res) {
@@ -187,7 +187,7 @@ function check_env()
 function check_run()
 {
     //不仅daemon模式检查是否已经运行，
-    $fd = fopen('./lock.txt', 'w');
+    $fd = fopen('/lock.txt', 'w');
     //这里必须是非阻塞写入，否则进程一直挂在这里不动了
     $res = flock($fd, LOCK_EX | LOCK_NB);
     if (!$res) {
