@@ -74,7 +74,7 @@ function handle($url, $param,$_request,$momo_lady)
         $fuck->set($k,$v);
     }
     foreach ($momo_lady as $k=>$v){
-        $key=str_replace('"','',$v[0]);
+        $key = preg_replace('/(\")/', '', $v[0]);
         var_dump($key);
     }
     //处理用户请求
