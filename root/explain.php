@@ -100,6 +100,7 @@ class HttpServer
                                 $_new_param[]=$b;
                             }
                         }
+                        print_r($_new_param);
                         $_param[$_new_param[0].'']=$_new_param[1];
                         $str3=substr($str1,stripos($str1,$part_end)+$part_end_length);
                         $need_str=$str3;
