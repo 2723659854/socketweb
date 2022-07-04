@@ -27,7 +27,7 @@ class HttpServer
         $this->port=$_port;
     }
 
-    public function run12()
+    public function run()
     {
         //header("Content-Type:text/html;charset=utf-8");
         //将将连接绑定到ip和端口
@@ -130,7 +130,7 @@ class HttpServer
 
     }
 
-    public function run()
+    public function run_test()
     {
         //header("Content-Type:text/html;charset=utf-8");
         //将将连接绑定到ip和端口
