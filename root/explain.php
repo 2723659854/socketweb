@@ -40,9 +40,9 @@ class HttpServer
             $socketAccept = socket_accept($this->_socket);
 
             //读取信息流
-            $request      = socket_read($socketAccept, 2097152);
-            var_dump(($request));
-            //todo  解析post提交的参数
+            $request      = socket_read($socketAccept, 1024);
+            //var_dump(($request));
+            // 解析post提交的参数
             $part="form-data; name=";
             $part_length=strlen($part);
             $part_end="------WebKitFormBoundary";
@@ -68,6 +68,9 @@ class HttpServer
             $_mark=$this->getUri($request);
             $fileName = $_mark['file'];
             $_request=$_mark['request'];
+            foreach ($_mark['post_param'] as $k=>$v){
+                $_param[$k]=$v;
+            }
             $url=$fileName;//用户访问的路由，问号前面的是路径，后面的是参数
 
             //获取文件名后缀
@@ -99,7 +102,7 @@ class HttpServer
                 default:
                     //其他类型的都默认为php类型文件，需要php文件解释
                     //非静态资源文件解析路由和参数
-                    //todo  这里有问题 不管有没有参数都要解析路由
+                    //解析get路由里面的参数
                     if (strpos($url,'?')){
                         $request_url=explode('?',$url);
                         $route=$request_url[0];
@@ -130,18 +133,33 @@ class HttpServer
     protected function getUri($request = '')
     {
         $arrayRequest = explode(PHP_EOL, $request);
-        //var_dump($arrayRequest);
         $line         = $arrayRequest[0];
         $url         = trim(preg_replace('/(\w+)\s\/(.*)\sHTTP\/1.1/i', '$2', $line));
         $method         = trim(preg_replace('/(\w+)\s\/(.*)\sHTTP\/1.1/i', '$1', $line));
         //其他的参数，都拆分成数组
-
         unset($arrayRequest[0]);
-        array_filter($arrayRequest);
+        foreach ($arrayRequest as $k=>$v){
+            if ($v==null||$v==''){
+                unset($arrayRequest[$k]);
+            }
+        }
+        $post_param=[];
+        //如果是post提交，还有可能参数在路由里面
+        if ($method=='POST'||$method=='post'){
+            $now=$arrayRequest;
+            $param=array_pop($now);
+            if (strpos($param,'&')){
+                $many=explode('&',$param);
+                foreach ($many as $a=>$b){
+                    $dou=explode('=',$b);
+                    $post_param[$dou[0]]=isset($dou[1])?$dou[1]:null;
+                }
+            }
+        }
+
         $arrayRequest[]="method: ".$method;
         $arrayRequest[]="path: /".$url;
-        return ['file'=>$url,'request'=>$arrayRequest];
-        //return ['file'=>$file,'header'];
+        return ['file'=>$url,'request'=>$arrayRequest,'post_param'=>$post_param];
     }
 
     //关闭服务

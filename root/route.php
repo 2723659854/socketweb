@@ -4,7 +4,11 @@
 //todo 这里就要求类文件和类名必须大写
 function route($url){
     //首先拆分路由
-    $new_url=array_filter(explode('/',$url));
+    $url=array_filter(explode('/',$url));
+    $new_url=[];
+    foreach ($url as $k=>$v){
+        $new_url[]=$v;
+    }
     $num=count($new_url);
     switch ($num){
         case 0:
