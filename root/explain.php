@@ -193,6 +193,7 @@ class HttpServer
                 }
                 if (stripos($b,'; filename="')){
                     $str1=substr($b,stripos($b,'; filename="'));
+                    echo '------------找到了文件-------------\r\n';
                     var_dump($str1);
                 }
             }
