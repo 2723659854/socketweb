@@ -27,7 +27,7 @@ foreach (traverse(app_path().'/app') as $key => $val) {
     require_once $val;
 }
 
-function handle($url, $param,$_request,$momo_lady)
+function handle($url, $param,$_request)
 {
 
     list($file, $class, $method) = explode('@', $url);
@@ -66,27 +66,9 @@ function handle($url, $param,$_request,$momo_lady)
                 $fuck->header($key,$value);
             }
         }
-
     }
-
-
     foreach ($param as $k=>$v){
         $fuck->set($k,$v);
-    }
-    foreach ($momo_lady as $k=>$v){
-        $str=$v[0];
-        $length=strlen($str);
-        static $fucks='';
-        $array=[];
-        for($i=0;$i<$length;$i++){
-            if (trim($str[$i])){
-                $fucks=$fucks.$str[$i];
-            }else{
-                $array[]=$fuck;
-                $fucks='';
-            }
-        }
-        print_r($array);
     }
     //处理用户请求
     $response=$class->$method($fuck);

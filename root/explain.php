@@ -42,12 +42,6 @@ class HttpServer
             //读取信息流
             $request      = socket_read($socketAccept, 1024*5);
             //var_dump(($request));
-            // 解析post提交的参数
-            $part="form-data; name=";
-            $part_length=strlen($part);
-            $part_end="------WebKitFormBoundary";
-            $part_end_length=strlen($part_end);
-            $need_str=$request;
             $_param=[];
             //向接受的文件写入响应code
             socket_write($socketAccept, 'HTTP/1.1 200 OK' . PHP_EOL);
@@ -91,22 +85,6 @@ class HttpServer
                     break;
                 default:
                     //todo linux 会丢失数据,真鸡儿难搞
-                    $momo_lady=[];
-                    while (stripos($need_str,$part)){
-                        $str1= substr($need_str,stripos($need_str,$part)+$part_length);
-                        $str2=substr($str1,0,stripos($str1,$part_end));
-                        $param1=explode(PHP_EOL,$str2);
-                        $array=[];
-                        foreach ($param1 as $a=>$b){
-                            if (trim($b)){
-                                $array[]=$b;
-                            }
-                        }
-                        $momo_lady[]=$array;
-                        $str3=substr($str1,stripos($str1,$part_end)+$part_end_length);
-                        $need_str=$str3;
-                    }
-
                     //其他类型的都默认为php类型文件，需要php文件解释
                     //非静态资源文件解析路由和参数
                     //解析get路由里面的参数
@@ -119,9 +97,9 @@ class HttpServer
                             $_v=explode('=',$v);
                             $_param[$_v[0]]=$_v['1'];
                         }
-                        $content=handle(route($route),$_param,$_request,$momo_lady);
+                        $content=handle(route($route),$_param,$_request);
                     }else{
-                        $content=handle(route($url),$_param,$_request,$momo_lady);
+                        $content=handle(route($url),$_param,$_request);
                     }
                     socket_write($socketAccept, 'Content-Type: text/html' . PHP_EOL);
                     socket_write($socketAccept, '' . PHP_EOL);
@@ -158,6 +136,7 @@ class HttpServer
         $arrayRequest = explode(PHP_EOL, $request);
         $line         = $arrayRequest[0];
 
+        //var_dump($arrayRequest);
         //这一段正则规则在windows下面生效，在Linux下不生效
         //$url         = trim(preg_replace('/(\w+)\s\/(.*)\sHTTP\/1.1/i', '$2', $line));
         //$method         = trim(preg_replace('/(\w+)\s\/(.*)\sHTTP\/1.1/i', '$1', $line));
@@ -193,6 +172,17 @@ class HttpServer
                 foreach ($many as $a=>$b){
                     $dou=explode('=',$b);
                     $post_param[$dou[0]]=isset($dou[1])?$dou[1]:null;
+                }
+            }
+            foreach ($now as $a=>$b){
+
+                if (stripos($b,'form-data; name="')){
+
+                    $str1=substr($b,stripos($b,'form-data; name="'));
+                    $arr=explode('"',$str1);
+                    $key=$arr[1];
+                    $value=isset($now[$a+2])?$now[$a+2]:null;
+                    $post_param[$key]=$value;
                 }
             }
         }
