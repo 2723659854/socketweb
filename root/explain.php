@@ -70,7 +70,11 @@ class HttpServer
                     socket_write($socketAccept, 'Content-Type: text/html' . PHP_EOL);
                     socket_write($socketAccept, '' . PHP_EOL);
                     $fileName = dirname(__DIR__) . '/view/' . $fileName;
-                    $fileContent = file_get_contents($fileName);
+                    if (file_exists($fileName)){
+                        $fileContent = file_get_contents($fileName);
+                    }else{
+                        $fileContent='sorry，你要找的文件丢失了！';
+                    }
                     socket_write($socketAccept, $fileContent, strlen($fileContent));
                     break;
                 case "jpg":
@@ -85,7 +89,12 @@ class HttpServer
                     socket_write($socketAccept, 'Content-Type: image/jpeg' . PHP_EOL);
                     socket_write($socketAccept, '' . PHP_EOL);
                     $fileName = dirname(__DIR__) . '/public/' . $fileName;
-                    $fileContent = file_get_contents($fileName);
+                    if (file_exists($fileName)){
+                        $fileContent = file_get_contents($fileName);
+                    }else{
+                        $fileContent='sorry，你要找的文件丢失了！';
+                    }
+
                     socket_write($socketAccept, $fileContent, strlen($fileContent));
                     break;
                 default:
