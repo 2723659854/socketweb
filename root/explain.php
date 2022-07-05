@@ -39,9 +39,11 @@ class HttpServer
             //接受socket信息流，监听连接并接受信息流
             $socketAccept = socket_accept($this->_socket);
 
+            echo "打印流\r\n";
+            echo file_get_contents("php://input");
             //读取信息流
-            $request      = socket_read($socketAccept, 1024*100);
-            echo $request;
+            $request      = socket_read($socketAccept, 1024*1000);
+            //echo $request;
             $_param=[];
             //向接受的文件写入响应code
             socket_write($socketAccept, 'HTTP/1.1 200 OK' . PHP_EOL);
@@ -139,7 +141,7 @@ class HttpServer
         $arrayRequest = explode(PHP_EOL, $request);
         $line         = $arrayRequest[0];
 
-        //var_dump($arrayRequest);
+        var_dump($arrayRequest);
         //这一段正则规则在windows下面生效，在Linux下不生效
         //$url         = trim(preg_replace('/(\w+)\s\/(.*)\sHTTP\/1.1/i', '$2', $line));
         //$method         = trim(preg_replace('/(\w+)\s\/(.*)\sHTTP\/1.1/i', '$1', $line));
@@ -183,6 +185,7 @@ class HttpServer
 
                     $str1=substr($b,stripos($b,'form-data; name="'));
                     $arr=explode('"',$str1);
+                    var_dump($arr);
                     $key=$arr[1];
                     $value=isset($now[$a+2])?$now[$a+2]:null;
                     $post_param[$key]=$value;
