@@ -5,7 +5,9 @@ set_time_limit(0);
 require_once __DIR__.'/route.php';
 //app解释器，根据上面的路由文件，解析出文件位置，然后加载对应的代码，执行里面的代码
 require_once __DIR__.'/app.php';
-require_once dirname(__DIR__).'/vendor/autoload.php';
+if (file_exists(dirname(__DIR__).'/vendor/autoload.php')){
+    require_once dirname(__DIR__).'/vendor/autoload.php';
+}
 //这里使用php解析请求
 class HttpServer
 {
