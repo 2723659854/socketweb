@@ -48,8 +48,15 @@ class Request
     }
 
     //处理文件
+
+    /**
+     * 获取文件
+     * @param string $name
+     * @return mixed|null
+     */
     public function file($name='file'){
 
+        return isset($this->value['file'])?$this->value['file']:null;
     }
 
 }

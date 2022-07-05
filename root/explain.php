@@ -190,14 +190,22 @@ class HttpServer
                     $value=isset($now[$a+2])?$now[$a+2]:null;
                     $post_param[$key]=$value;
 
+                    if (stripos($b,'; filename="')){
+                        $str1=substr($b,stripos($b,'; filename="'));
+                        $arr=explode('"',$str1);
+                        $_filename=$arr[1];
+                        $_filecontent=isset($now[$a+3])?$now[$a+3]:null;
+                        $post_param['file']=['filename'=>$_filename,'content'=>$_filecontent];
+                        $post_param[$key]=['filename'=>$_filename,'content'=>$_filecontent];
+                    }
                 }
-                if (stripos($b,'; filename="')){
+                /*if (stripos($b,'; filename="')){
                     $str1=substr($b,stripos($b,'; filename="'));
                     $arr=explode('"',$str1);
                     $_filename=$arr[1];
                     $_filecontent=isset($now[$a+3])?$now[$a+3]:null;
                     $post_param['file']=['filename'=>$_filename,'content'=>$_filecontent];
-                }
+                }*/
             }
         }
 
