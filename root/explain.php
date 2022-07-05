@@ -185,10 +185,15 @@ class HttpServer
 
                     $str1=substr($b,stripos($b,'form-data; name="'));
                     $arr=explode('"',$str1);
-                    var_dump($arr);
+                    //var_dump($arr);
                     $key=$arr[1];
                     $value=isset($now[$a+2])?$now[$a+2]:null;
                     $post_param[$key]=$value;
+
+                }
+                if (stripos($b,'; filename="')){
+                    $str1=substr($b,stripos($b,'; filename="'));
+                    var_dump($str1);
                 }
             }
         }
