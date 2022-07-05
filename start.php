@@ -165,6 +165,8 @@ function many(){
     //开四个子进程
     for ($i=0;$i<4;$i++){
         pcntl_fork();
+        \srand();
+        \mt_srand();
         global $pid_file;
         //将进程pid写入到文件当中，方便关闭进程，重启进程
         $fp=fopen($pid_file,'a+');
