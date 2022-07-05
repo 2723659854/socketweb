@@ -8,18 +8,29 @@ $param = $argv;
 ini_set('memory_limit',-1);
 $daemonize = false;//是否已守护进程模式运行
 $flag = true;//是否结束脚本运行
-global $pid_file, $log_file, $_port,$_listen;
+global $pid_file, $log_file, $_port,$_listen,$_server_num;
 $server = include __DIR__ . '/config/server.php';
 if (isset($server['port']) && $server['port']) {
     $_port = intval($server['port']);
 } else {
     $_port = 8020;
 }
+if (isset($server['num']) && $server['num']) {
+    $_server_num = intval($server['num']);
+} else {
+    $_server_num = 2;
+}
 $_listen="http://127.0.0.1:".$_port;
 $httpServer = null;
 $need_close = false;//是否需要关闭进程
 $pid_file = __DIR__.'/my_pid.txt';//pid存放文件
 $log_file = __DIR__.'/log.txt';//业务逻辑存放文件
+if (file_exists($log_file)){
+    $log=file_get_contents($log_file)."\r\n===================start==============\r\n";
+}else{
+    $log=''."\r\n===================start==============\r\n";
+}
+file_put_contents($log_file,$log);
 //检测是否是windows运行环境
 $system = true;//Linux系统
 $httpServer = null;
@@ -104,9 +115,9 @@ if ($daemonize) {
 function say()
 {
     global $log_file;
+    file_put_contents(getmypid().'_.txt',getmypid());
     while (true) {
         $fp = fopen($log_file, 'a+');
-        //记录当前进程id和时间，判断是否是单进程运行
         fwrite($fp, time() . "----" . getmypid() . "\r\n");
         fclose($fp);
         sleep(2);
@@ -140,6 +151,7 @@ function daemon()
         //关闭主进程
         exit(0);
     }
+
     global $pid_file;
     //将进程pid写入到文件当中，方便关闭进程，重启进程
     file_put_contents($pid_file, getmypid()."-");
@@ -147,6 +159,13 @@ function daemon()
     //setsid();   //使子进程独立1.摆脱原会话控制 2.摆脱原进程组的控制 3.摆脱控制终端的控制，4，升级子进程为主进程
     if (-1 === \posix_setsid()) {
         throw new Exception("Setsid fail");
+    }
+    //必须在具体业务前开启多进程
+    global $_server_num;
+    if ($_server_num>1){
+        for ($i=1;$i<=$_server_num;$i++){
+            pcntl_fork();
+        }
     }
     //业务逻辑在子进程运行
     many();
@@ -162,20 +181,12 @@ function daemon()
 
 //开启多进程
 function many(){
-    //开四个子进程
-    for ($i=0;$i<4;$i++){
-        pcntl_fork();
-        \srand();
-        \mt_srand();
-        global $pid_file;
-        //将进程pid写入到文件当中，方便关闭进程，重启进程
-        $fp=fopen($pid_file,'a+');
-        fwrite($fp,getmypid().'-');
-        fclose($fp);
-        //这里不能
-        nginx();
-        //say();
-    }
+    global $pid_file;
+    //将进程pid写入到文件当中，方便关闭进程，重启进程
+    $fp=fopen($pid_file,'a+');
+    fwrite($fp,getmypid().'-');
+    fclose($fp);
+    nginx();
 }
 
 //关闭运行的进程
