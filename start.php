@@ -18,8 +18,8 @@ if (isset($server['port']) && $server['port']) {
 $_listen="http://127.0.0.1:".$_port;
 $httpServer = null;
 $need_close = false;//是否需要关闭进程
-$pid_file = '/my_pid.txt';//pid存放文件
-$log_file = '/log.txt';//业务逻辑存放文件
+$pid_file = __DIR__.'/my_pid.txt';//pid存放文件
+$log_file = __DIR__.'/log.txt';//业务逻辑存放文件
 //检测是否是windows运行环境
 $system = true;//Linux系统
 $httpServer = null;
@@ -141,15 +141,14 @@ function daemon()
     }
     global $pid_file;
     //将进程pid写入到文件当中，方便关闭进程，重启进程
-    file_put_contents($pid_file, getmypid());
+    file_put_contents($pid_file, getmypid()."-");
 
     //setsid();   //使子进程独立1.摆脱原会话控制 2.摆脱原进程组的控制 3.摆脱控制终端的控制，4，升级子进程为主进程
     if (-1 === \posix_setsid()) {
         throw new Exception("Setsid fail");
     }
     //业务逻辑在子进程运行
-    nginx();
-
+    many();
     //再次创建一个子进程，Fork再次避免系统重新控制终端
     $pid = \pcntl_fork();
     if (-1 === $pid) {
@@ -160,18 +159,37 @@ function daemon()
     }
 }
 
+//开启多进程
+function many(){
+    //开四个子进程
+    for ($i=0;$i<4;$i++){
+        pcntl_fork();
+        global $pid_file;
+        //将进程pid写入到文件当中，方便关闭进程，重启进程
+        $fp=fopen($pid_file,'a+');
+        fwrite($fp,getmypid().'-');
+        fclose($fp);
+        nginx();
+    }
+}
+
 //关闭运行的进程
 function close()
 {
     echo "关闭进程中...\r\n";
     global $pid_file;
     if (file_exists($pid_file)) {
-        $master_id = file_get_contents($pid_file);
-        if ($master_id > 0) {
-            \posix_kill($master_id, SIGKILL);
-            //等待一秒，给程序执行足够的执行时间
-            sleep(1);
+        $master_ids = file_get_contents($pid_file);
+        $master_id=explode('-',$master_ids);
+        foreach ($master_id as $k=>$v){
+            if ($v > 0) {
+                \posix_kill($v, SIGKILL);
+            }
         }
+        //清空pid文件
+        file_put_contents($pid_file,null);
+        //等待一秒，给程序执行足够的执行时间
+        sleep(1);
     }
 }
 
