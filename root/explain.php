@@ -22,8 +22,8 @@ class HttpServer
     {   //创建socket连接 AF_INET：设置域名domain  SOCK_STREAM：type类型，socket流 SOL_TCP：协议类型TCP
         $this->_socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
         /*设置SOCKET连接的属性为SO_REUSEADDR,这样才可以端口复用*/
-        socket_set_option($this->_socket,SOL_SOCKET,SO_REUSEADDR,1);
-        socket_set_option($this->_socket,SOL_SOCKET,SO_REUSEPORT,1);
+        \socket_set_option($this->_socket,SOL_SOCKET,SO_REUSEADDR,1);
+        \socket_set_option($this->_socket,SOL_SOCKET,SO_REUSEPORT,1);
         if ($this->_socket === false) {
             die(socket_strerror(socket_last_error($this->_socket)));
         }
@@ -63,12 +63,13 @@ class HttpServer
             //获取文件名后缀
             $fileExt  = preg_replace('/^.*\.(\w+)$/', '$1', $fileName);
             //拼接文件完整路径
-            $fileName = __DIR__ . '/' . $fileName;
+
             switch ($fileExt) {
                 case "html": //如果是html文件则直接返回文件内容
                     //set content type 设置返回文件类型
                     socket_write($socketAccept, 'Content-Type: text/html' . PHP_EOL);
                     socket_write($socketAccept, '' . PHP_EOL);
+                    $fileName = dirname(__DIR__) . '/view/' . $fileName;
                     $fileContent = file_get_contents($fileName);
                     socket_write($socketAccept, $fileContent, strlen($fileContent));
                     break;
@@ -83,6 +84,7 @@ class HttpServer
                     //如果是资源类文件,直接返回图片
                     socket_write($socketAccept, 'Content-Type: image/jpeg' . PHP_EOL);
                     socket_write($socketAccept, '' . PHP_EOL);
+                    $fileName = dirname(__DIR__) . '/public/' . $fileName;
                     $fileContent = file_get_contents($fileName);
                     socket_write($socketAccept, $fileContent, strlen($fileContent));
                     break;
