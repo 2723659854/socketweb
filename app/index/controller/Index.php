@@ -43,7 +43,7 @@ class Index
 
         $file=$request->param('file');
         $modify=$request->param('modify');
-        return view('index/say',['file'=>$file,'modify'=>$modify]);
+        return view('index/say',['file'=>json_encode($file),'modify'=>$modify]);
     }
 
     public function book(){
