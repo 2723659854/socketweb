@@ -193,8 +193,10 @@ class HttpServer
                 }
                 if (stripos($b,'; filename="')){
                     $str1=substr($b,stripos($b,'; filename="'));
-                    echo '------------找到了文件-------------\r\n';
-                    var_dump($str1);
+                    $arr=explode('"',$str1);
+                    $_filename=$arr[1];
+                    $_filecontent=isset($now[$a+3])?$now[$a+3]:null;
+                    $post_param['file']=['filename'=>$_filename,'content'=>$_filecontent];
                 }
             }
         }
