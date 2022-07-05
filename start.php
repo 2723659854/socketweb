@@ -126,38 +126,41 @@ function daemon()
 {
     //重设文件掩码为0，就是文件权限为0
     \umask(0);
-    //创建子进程
-    $pid = \pcntl_fork();
-    if (-1 === $pid) {
-        //创建子进程失败
-        throw new Exception('Fork fail');
-    } elseif ($pid > 0) {
-        //必须在主进程结束前打印，否则控制台被关闭后看不到
-        global $_listen;
-        echo $_listen."\r\n";
-        echo "进程启动完成,你可以输入php start.php stop停止运行\r\n";
-        //关闭主进程
-        exit(0);
-    }
-    global $pid_file;
-    //将进程pid写入到文件当中，方便关闭进程，重启进程
-    file_put_contents($pid_file, getmypid());
+    for ($i=1;$i<=2;$i++){
+        //创建子进程
+        $pid = \pcntl_fork();
+        if (-1 === $pid) {
+            //创建子进程失败
+            throw new Exception('Fork fail');
+        } elseif ($pid > 0) {
+            //必须在主进程结束前打印，否则控制台被关闭后看不到
+            global $_listen;
+            echo $_listen."\r\n";
+            echo "进程启动完成,你可以输入php start.php stop停止运行\r\n";
+            //关闭主进程
+            exit(0);
+        }
+        global $pid_file;
+        //将进程pid写入到文件当中，方便关闭进程，重启进程
+        file_put_contents($pid_file, getmypid());
 
-    //setsid();   //使子进程独立1.摆脱原会话控制 2.摆脱原进程组的控制 3.摆脱控制终端的控制，4，升级子进程为主进程
-    if (-1 === \posix_setsid()) {
-        throw new Exception("Setsid fail");
-    }
-    //业务逻辑在子进程运行
-    nginx();
+        //setsid();   //使子进程独立1.摆脱原会话控制 2.摆脱原进程组的控制 3.摆脱控制终端的控制，4，升级子进程为主进程
+        if (-1 === \posix_setsid()) {
+            throw new Exception("Setsid fail");
+        }
+        //业务逻辑在子进程运行
+        nginx();
 
-    //再次创建一个子进程，Fork再次避免系统重新控制终端
-    $pid = \pcntl_fork();
-    if (-1 === $pid) {
-        throw new Exception("Fork fail");
-    } elseif (0 !== $pid) {
-        //不管是子进程还是主进程都退出
-        exit(0);
+        //再次创建一个子进程，Fork再次避免系统重新控制终端
+        $pid = \pcntl_fork();
+        if (-1 === $pid) {
+            throw new Exception("Fork fail");
+        } elseif (0 !== $pid) {
+            //不管是子进程还是主进程都退出
+            exit(0);
+        }
     }
+
 }
 
 //关闭运行的进程
