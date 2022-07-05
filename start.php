@@ -169,7 +169,8 @@ function many(){
         $fp=fopen($pid_file,'a+');
         fwrite($fp,getmypid().'-');
         fclose($fp);
-        nginx();
+        //nginx();
+        say();
     }
 }
 
