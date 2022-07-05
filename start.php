@@ -151,7 +151,7 @@ function daemon()
         //关闭主进程
         exit(0);
     }
-
+    cli_set_process_title("XiaoSongShu");
     global $pid_file;
     //将进程pid写入到文件当中，方便关闭进程，重启进程
     file_put_contents($pid_file, getmypid()."-");
