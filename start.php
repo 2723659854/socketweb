@@ -169,6 +169,7 @@ function many(){
         $fp=fopen($pid_file,'a+');
         fwrite($fp,getmypid().'-');
         fclose($fp);
+        //这里不能
         //nginx();
         say();
     }
