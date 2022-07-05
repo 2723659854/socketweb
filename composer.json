@@ -1,0 +1,19 @@
+{
+    "name": "xiaosongshu/socketweb",
+    "description": "\"一个php常驻内存轻量级框架\"",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Xiaosongshu\\Socketweb\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "yanglong",
+            "email": "2723659854@qq.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}

@@ -1,5 +1,0 @@
-1，加入后台守护进程模式运行
-2，加入端口监听，处理http请求
-3，使用php解析请求
-4，端口复用https://blog.csdn.net/weixin_42513028/article/details/116050641
-5，socket_set_option($this->_socket,SOL_SOCKET,SO_REUSEADDR,1);

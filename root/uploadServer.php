@@ -1,6 +1,6 @@
 <?php
 $path = __DIR__;
-$config=include $path.'/config/server.php';
+$config= include $path . '/config/server.php';
 $port=isset($config['upload'])?$config['upload']:10008;
 echo "上传接口http://127.0.0.1:".$port."\r\n";
 $tcp = getprotobyname("tcp");
@@ -9,7 +9,7 @@ socket_bind($socket, '0.0.0.0', $port); //绑定要监听的端口
 socket_listen($socket); //监听端口
 //初始化一个数据，和客户端通信
 $buffer = "connect";
-$path = __DIR__.'/public/file/';
+$path = __DIR__ . '/public/file/';
 echo $path;
 while (true) {
     // 接受一个socket连接

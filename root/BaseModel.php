@@ -4,7 +4,6 @@ namespace Root;
 
 use mysqli;
 use mysqli_sql_exception as MysqlException;
-use Root\Request;
 class BaseModel
 {
 
@@ -23,27 +22,23 @@ class BaseModel
     private $limit=0;
     private $offset=0;
 
-
-
     public function __construct()
     {
-//        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-//        $config = config('database');
-//        $this->type = $config['default'];
-//        $database_config = $config[$this->type];
-//        $this->host = $database_config['host'];
-//        $this->username = $database_config['username'];
-//        $this->password = $database_config['passwd'];
-//        $this->dbname = $database_config['dbname'];
-//        $this->port = $database_config['port'];
-
-
+        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+        $config = config('database');
+        $this->type = $config['default'];
+        $database_config = $config[$this->type];
+        $this->host = $database_config['host'];
+        $this->username = $database_config['username'];
+        $this->password = $database_config['passwd'];
+        $this->dbname = $database_config['dbname'];
+        $this->port = $database_config['port'];
         try{
-            //$mysqli = new mysqli($this->host, $this->username, $this->password, $this->dbname, $this->port);
-            $mysqli = new mysqli('122.51.99.152', 'root', 'root', 'test', '3306');
+            $mysqli = new mysqli($this->host, $this->username, $this->password, $this->dbname, $this->port);
+            //$mysqli = new mysqli('122.51.99.152', 'root', 'root', 'test', '3306');
         }catch (MysqlException $e){
             echo $e->getMessage();
-            die("数据库连接失败！");
+            die("致命错误：数据库连接失败！".$e->getMessage());
         }
         //$mysqli = new mysqli('127.0.0.1', 'root', 'root', 'test', '3306');
         $mysqli->set_charset('utf8');
@@ -189,7 +184,6 @@ class BaseModel
         try{
             return $this->mysql->query($sql);
         }catch (MysqlException $e){
-
             echo $e->getMessage();
             die('数据库操作失败');
         }

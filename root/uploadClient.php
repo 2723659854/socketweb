@@ -1,6 +1,6 @@
 <?php
 $path = __DIR__;
-$config=include $path.'/config/server.php';
+$config= include $path . '/config/server.php';
 $port=isset($config['upload'])?$config['upload']:10008;
 $fp = fsockopen("127.0.0.1", $port, $errno, $errstr, 10);
 $array = $_FILES['file'];

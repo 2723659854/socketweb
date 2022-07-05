@@ -5,6 +5,7 @@ set_time_limit(0);
 require_once __DIR__.'/route.php';
 //app解释器，根据上面的路由文件，解析出文件位置，然后加载对应的代码，执行里面的代码
 require_once __DIR__.'/app.php';
+require_once dirname(__DIR__).'/vendor/autoload.php';
 //这里使用php解析请求
 class HttpServer
 {
@@ -38,9 +39,6 @@ class HttpServer
         while (true) {
             //接受socket信息流，监听连接并接受信息流
             $socketAccept = socket_accept($this->_socket);
-
-            echo "打印流\r\n";
-            echo file_get_contents("php://input");
             //读取信息流
             $request      = socket_read($socketAccept, 1024*1000);
             //echo $request;
@@ -141,7 +139,7 @@ class HttpServer
         $arrayRequest = explode(PHP_EOL, $request);
         $line         = $arrayRequest[0];
 
-        var_dump($arrayRequest);
+        //var_dump($arrayRequest);
         //这一段正则规则在windows下面生效，在Linux下不生效
         //$url         = trim(preg_replace('/(\w+)\s\/(.*)\sHTTP\/1.1/i', '$2', $line));
         //$method         = trim(preg_replace('/(\w+)\s\/(.*)\sHTTP\/1.1/i', '$1', $line));

@@ -39,7 +39,7 @@ class Index
     }
 
     public function store(Request $request){
-        var_dump($request);
+        //var_dump($request);
 
         $file=$request->param('file');
         $modify=$request->param('modify');
