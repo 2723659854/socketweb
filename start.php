@@ -170,8 +170,8 @@ function many(){
         fwrite($fp,getmypid().'-');
         fclose($fp);
         //这里不能
-        //nginx();
-        say();
+        nginx();
+        //say();
     }
 }
 
