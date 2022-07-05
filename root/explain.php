@@ -73,7 +73,7 @@ class HttpServer
                     if (file_exists($fileName)){
                         $fileContent = file_get_contents($fileName);
                     }else{
-                        $fileContent='sorry，the file is missing！';
+                        $fileContent='sorry,the file is missing!';
                     }
                     socket_write($socketAccept, $fileContent, strlen($fileContent));
                     break;
@@ -92,7 +92,7 @@ class HttpServer
                     if (file_exists($fileName)){
                         $fileContent = file_get_contents($fileName);
                     }else{
-                        $fileContent='sorry，the file is missing！';
+                        $fileContent='sorry,the file is missing!';
                     }
 
                     socket_write($socketAccept, $fileContent, strlen($fileContent));
