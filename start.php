@@ -124,6 +124,7 @@ function nginx()
 //以守护进程模式运行
 function daemon()
 {
+    ini_set('display_errors','off');
     //重设文件掩码为0，就是文件权限为0
     \umask(0);
     //创建子进程

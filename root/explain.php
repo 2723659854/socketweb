@@ -59,11 +59,11 @@ class HttpServer
                 $_param[$k]=$v;
             }
             $url=$fileName;//用户访问的路由，问号前面的是路径，后面的是参数
-
+            //处理路由当中的/
+            $fileName=implode('/',array_filter(explode('/',$fileName)));
             //获取文件名后缀
             $fileExt  = preg_replace('/^.*\.(\w+)$/', '$1', $fileName);
             //拼接文件完整路径
-
             switch ($fileExt) {
                 case "html": //如果是html文件则直接返回文件内容
                     //set content type 设置返回文件类型
