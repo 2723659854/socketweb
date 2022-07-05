@@ -22,8 +22,8 @@ class HttpServer
     {   //创建socket连接 AF_INET：设置域名domain  SOCK_STREAM：type类型，socket流 SOL_TCP：协议类型TCP
         $this->_socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
         /*设置SOCKET连接的属性为SO_REUSEADDR,这样才可以端口复用*/
-        \socket_set_option($this->_socket,SOL_SOCKET,SO_REUSEADDR,1);
-        \socket_set_option($this->_socket,SOL_SOCKET,SO_REUSEPORT,1);
+        @\socket_set_option($this->_socket,SOL_SOCKET,SO_REUSEADDR,1);
+        @\socket_set_option($this->_socket,SOL_SOCKET,SO_REUSEPORT,1);
         if ($this->_socket === false) {
             die(socket_strerror(socket_last_error($this->_socket)));
         }
