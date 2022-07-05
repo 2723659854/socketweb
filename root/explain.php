@@ -40,8 +40,8 @@ class HttpServer
             $socketAccept = socket_accept($this->_socket);
 
             //读取信息流
-            $request      = socket_read($socketAccept, 1024*5);
-            //var_dump(($request));
+            $request      = socket_read($socketAccept, 1024*100);
+            echo $request;
             $_param=[];
             //向接受的文件写入响应code
             socket_write($socketAccept, 'HTTP/1.1 200 OK' . PHP_EOL);
@@ -114,7 +114,7 @@ class HttpServer
 
     }
 
-    public function run_test()
+    public function run123()
     {
         //header("Content-Type:text/html;charset=utf-8");
         //将将连接绑定到ip和端口
@@ -125,6 +125,8 @@ class HttpServer
         while (true) {
             //接受socket信息流，监听连接并接受信息流
             $socketAccept = socket_accept($this->_socket);
+            $request      = socket_read($socketAccept, 1024);
+            var_dump($request);
             socket_write($socketAccept, "\r\n welcome to  php server", 100);
             socket_close($socketAccept);
         }
@@ -133,6 +135,7 @@ class HttpServer
     //解析路由
     protected function getUri($request = '')
     {
+        //var_dump($request);
         $arrayRequest = explode(PHP_EOL, $request);
         $line         = $arrayRequest[0];
 
