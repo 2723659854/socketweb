@@ -174,8 +174,6 @@ function daemon()
                     $mother[]=$v;
                 }
             }
-            print_r($mother);
-            print_r($father);
             $worker_num=count($mother);
             if ($worker_num>=$_server_num){
                 break;
