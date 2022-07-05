@@ -166,7 +166,17 @@ function daemon()
     if ($_server_num>1){
         for ($i=1;$i<=$_server_num;$i++){
             $read_log_content=file_get_contents($pid_file);
-            $worker_num=count(explode('-',$read_log_content));
+            $father=explode('-',$read_log_content);
+            //去除重复的元素
+            $mother=[];
+            foreach ($father as $k=>$v){
+                if (!array_search($v,$mother)){
+                    $mother[]=$v;
+                }
+            }
+            print_r($mother);
+            print_r($father);
+            $worker_num=count($mother);
             if ($worker_num>=$_server_num){
                 break;
             }else{
