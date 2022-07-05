@@ -3,13 +3,14 @@ namespace App\Index\Controller;
 use App\Model\User;
 use App\Model\Book;
 use Root\Request;
+use Root\Cache;
 class Index
 {
     //如果需要渲染模板就调用view 不需要渲染模板就不调用view
     public function __construct(){
 
     }
-    //控制器里面写了一个index方法
+    //数据查询
     public function index(Request $request){
         //print_r($request);
         $var=$request->param('var');
@@ -20,7 +21,7 @@ class Index
         return view('index/index',['var'=>$var,'str'=>date('Y-m-d H:i:s'),'user'=>json_encode($data),'app_name'=>$app_name]);
     }
 
-    //测试第二个方法和控制器
+    //测试数据写入
     public function say(Request $request){
 
         //var_dump($request);
@@ -34,10 +35,13 @@ class Index
         return view('index/say');
     }
 
+    //文件上传，以及缓存用法
     public function upload(){
-        return view('index/upload');
+        Cache::getInstance()->set('name','小松鼠');
+        return view('index/upload',['cache'=>Cache::getInstance()->get('name')]);
     }
 
+    //表单提交和文件上传
     public function store(Request $request){
         //var_dump($request);
 
@@ -45,9 +49,10 @@ class Index
         $modify=$request->param('modify');
         return view('index/say',['file'=>json_encode($file),'modify'=>$modify]);
     }
-
+    //直接返回数据
     public function book(){
-        echo 234234;
+        //Cache::getInstance()->set('fuck','fuck you');
+        //print_r(Cache::getInstance()->get('fuck'));
         return '333';
     }
 }

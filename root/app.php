@@ -4,6 +4,7 @@ require_once __DIR__.'/function.php';
 require_once __DIR__.'/view.php';
 require_once __DIR__.'/Request.php';
 require_once __DIR__.'/BaseModel.php';
+require_once __DIR__.'/Cache.php';
 //加载控制器和所有模型,否则无法直接use使用某一个类
 function traverse($path = '.')
 {
