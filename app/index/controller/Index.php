@@ -39,17 +39,11 @@ class Index
     }
 
     public function store(Request $request){
-        //echo "store\r\n";
-        var_dump($request->value);
-        /*foreach ($request->value as $k=>$v){
-            echo $k;
-            echo "\r\n";
-            echo $v;
-            echo "\r\n";
-        }*/
+        var_dump($request);
 
         $file=$request->param('file');
-        return view('index/say',['file'=>$file]);
+        $modify=$request->param('modify');
+        return view('index/say',['file'=>$file,'modify'=>$modify]);
     }
 
     public function book(){
