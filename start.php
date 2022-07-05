@@ -151,11 +151,12 @@ function daemon()
         //关闭主进程
         exit(0);
     }
-    cli_set_process_title("xiaosongshu");
+
     global $pid_file;
     //将进程pid写入到文件当中，方便关闭进程，重启进程
-    file_put_contents($pid_file, getmypid()."-");
+    file_put_contents($pid_file, '');
 
+    $master_pid=getmypid();
     //setsid();   //使子进程独立1.摆脱原会话控制 2.摆脱原进程组的控制 3.摆脱控制终端的控制，4，升级子进程为主进程
     if (-1 === \posix_setsid()) {
         throw new Exception("Setsid fail");
@@ -164,11 +165,26 @@ function daemon()
     global $_server_num;
     if ($_server_num>1){
         for ($i=1;$i<=$_server_num;$i++){
-            pcntl_fork();
+            $read_log_content=file_get_contents($pid_file);
+            $worker_num=count(explode('-',$read_log_content));
+            if ($worker_num>=$_server_num){
+                break;
+            }else{
+                \pcntl_fork();
+                $fp=fopen($pid_file,'a+');
+                fwrite($fp,getmypid().'-');
+                fclose($fp);
+            }
         }
     }
+    if (getmypid()==$master_pid){
+        cli_set_process_title("xiaosongshu_master");
+    }else{
+        cli_set_process_title("xiaosongshu_son");
+    }
     //业务逻辑在子进程运行
-    many();
+    //many();
+    nginx();
     //再次创建一个子进程，Fork再次避免系统重新控制终端
     $pid = \pcntl_fork();
     if (-1 === $pid) {
