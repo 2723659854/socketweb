@@ -190,7 +190,7 @@ function daemon()
         $class->handle();
     },[],true);
     root\Timer::run();
-
+    pcntl_signal_dispatch();
     if (getmypid()==$master_pid){
         cli_set_process_title("xiaosongshu_master");
     }else{
