@@ -119,7 +119,7 @@ class HttpServer
                     socket_write($socketAccept, '' . PHP_EOL);
 
                     if ($content){
-                        $content=(string)$content;
+                        $content=is_string($content)?$content:json_encode($content);
                         $write_length=strlen($content);
                         if ($write_length<1024){
                             $write_length=1024;
