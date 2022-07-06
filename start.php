@@ -184,12 +184,12 @@ function daemon()
         }
     }
     //todo 这里需要给每一个进程创建一个定时任务
-    root\Timer::add(2,function (){
-        require_once __DIR__.'/app/timer/Test.php';
-        $class=new \App\Time\Test();
-        $class->handle();
-    },[],true);
-    root\Timer::run();
+//    root\Timer::add(2,function (){
+//        require_once __DIR__.'/app/timer/Test.php';
+//        $class=new \App\Time\Test();
+//        $class->handle();
+//    },[],true);
+//    root\Timer::run();
 
     if (getmypid()==$master_pid){
         cli_set_process_title("xiaosongshu_master");
