@@ -199,7 +199,7 @@ function daemon()
     //业务逻辑在子进程运行
     //many();
     //nginx();
-    //say();
+    say();
     //再次创建一个子进程，Fork再次避免系统重新控制终端
     $pid = \pcntl_fork();
     if (-1 === $pid) {
