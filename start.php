@@ -116,16 +116,18 @@ if ($daemonize) {
 //业务逻辑代码示例，用于观测脚本是否正在运行，具体业务逻辑自己实现
 function xiaosongshu_timer()
 {
-    echo 123;
-    echo "\r\n";
-    root\Timer::add(2,function (){
-        require_once __DIR__.'/app/timer/Test.php';
-        $class=new \App\Time\Test();
-        $class->handle();
-    },[],true);
-    root\Timer::run();
+
+//    root\Timer::add(2,function (){
+//        require_once __DIR__.'/app/timer/Test.php';
+//        $class=new \App\Time\Test();
+//        $class->handle();
+//    },[],true);
+//    root\Timer::run();
     while (true) {
+        echo 123;
+        echo "\r\n";
         pcntl_signal_dispatch();
+        sleep(1);
     }
 }
 
