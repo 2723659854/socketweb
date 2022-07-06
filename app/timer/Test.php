@@ -5,6 +5,6 @@ class Test{
 
 
     public function handle(){
-        file_put_contents(app_path().'/public/'.time().'book.txt','搜索');
+        file_put_contents(app_path().'/public/book/'.time().'book.txt','搜索');
     }
 }
