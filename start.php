@@ -114,9 +114,15 @@ if ($daemonize) {
     nginx();
 }
 //业务逻辑代码示例，用于观测脚本是否正在运行，具体业务逻辑自己实现
-function say()
+function xiaosongshu_timer()
 {
-
+    root\Timer::add(2,function (){
+        require_once __DIR__.'/app/timer/Test.php';
+        $class=new \App\Time\Test();
+        $class->handle();
+    },[],true);
+    root\Timer::run();
+    pcntl_signal_dispatch();
     while (true) {
         pcntl_signal_dispatch();
     }
@@ -161,6 +167,9 @@ function daemon()
     }
     //必须在具体业务前开启多进程
     global $_server_num;
+    if($_server_num<2){
+        $_server_num=2;
+    }
     if ($_server_num>1){
         for ($i=1;$i<=$_server_num;$i++){
             $read_log_content=file_get_contents($pid_file);
@@ -173,32 +182,40 @@ function daemon()
                 }
             }
             $worker_num=count($mother);
-            if ($worker_num>=$_server_num){
+            if ($worker_num>=2*$_server_num){
                 break;
             }else{
-                \pcntl_fork();
+                $_this_pid=\pcntl_fork();
                 $fp=fopen($pid_file,'a+');
                 fwrite($fp,getmypid().'-');
                 fclose($fp);
+                if (($_this_pid%2)==0){
+                    //如果pid是偶数，则开启nginx
+                    if (getmypid()==$master_pid){
+                        cli_set_process_title("xiaosongshu_master");
+                    }else{
+                        cli_set_process_title("xiaosongshu_http");
+                    }
+                    nginx();
+                }else{
+                    if (getmypid()==$master_pid){
+                        cli_set_process_title("xiaosongshu_master");
+                    }else{
+                        cli_set_process_title("xiaosongshu_timer");
+                    }
+                    //pid 为奇数的时候开启定时器
+                    xiaosongshu_timer();
+                }
+
             }
         }
     }
     //todo 这里需要给每一个进程创建一个定时任务
-    root\Timer::add(2,function (){
-        require_once __DIR__.'/app/timer/Test.php';
-        $class=new \App\Time\Test();
-        $class->handle();
-    },[],true);
-    root\Timer::run();
-    pcntl_signal_dispatch();
-    if (getmypid()==$master_pid){
-        cli_set_process_title("xiaosongshu_master");
-    }else{
-        cli_set_process_title("xiaosongshu_son");
-    }
+
+
     //业务逻辑在子进程运行
     //many();
-    nginx();
+
     //say();
     //再次创建一个子进程，Fork再次避免系统重新控制终端
     $pid = \pcntl_fork();
