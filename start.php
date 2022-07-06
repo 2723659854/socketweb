@@ -185,7 +185,9 @@ function daemon()
             if ($worker_num>=$_server_num){
                 break;
             }else{
-                $_this_pid=\pcntl_fork();
+                $_this_pid=pcntl_fork();
+                echo $_this_pid;
+                echo "\r\n";
                 $fp=fopen($pid_file,'a+');
                 fwrite($fp,getmypid().'-');
                 fclose($fp);
