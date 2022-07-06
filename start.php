@@ -185,39 +185,35 @@ function daemon()
             if ($worker_num>=$_server_num){
                 break;
             }else{
-                $_this_pid=pcntl_fork();
-                echo $_this_pid;
-                echo "\r\n";
+                pcntl_fork();
                 $fp=fopen($pid_file,'a+');
                 fwrite($fp,getmypid().'-');
                 fclose($fp);
-                if (($_this_pid%2)==0){
-                    //如果pid是偶数，则开启nginx
-                    if (getmypid()==$master_pid){
-                        cli_set_process_title("xiaosongshu_master");
-                    }else{
-                        cli_set_process_title("xiaosongshu_http");
-                    }
-                    nginx();
-                }else{
-                    if (getmypid()==$master_pid){
-                        cli_set_process_title("xiaosongshu_master");
-                    }else{
-                        cli_set_process_title("xiaosongshu_timer");
-                    }
-                    //pid 为奇数的时候开启定时器
-                    xiaosongshu_timer();
-                }
-
             }
         }
     }
     //todo 这里需要给每一个进程创建一个定时任务
-
+    $_this_pid=getmypid();
+    if (($_this_pid%2)==0){
+        //如果pid是偶数，则开启nginx
+        if (getmypid()==$master_pid){
+            cli_set_process_title("xiaosongshu_master");
+        }else{
+            cli_set_process_title("xiaosongshu_http");
+        }
+        nginx();
+    }else{
+        if (getmypid()==$master_pid){
+            cli_set_process_title("xiaosongshu_master");
+        }else{
+            cli_set_process_title("xiaosongshu_timer");
+        }
+        //pid 为奇数的时候开启定时器
+        xiaosongshu_timer();
+    }
 
     //业务逻辑在子进程运行
     //many();
-    xiaosongshu_timer();
     //say();
     //再次创建一个子进程，Fork再次避免系统重新控制终端
     $pid = \pcntl_fork();
