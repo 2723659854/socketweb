@@ -5,6 +5,6 @@ class Test{
 
 
     public function handle(){
-        echo "这是一个定时器呢\r\n";
+        file_put_contents(app_path().'/public/'.time().'book.txt','搜索');
     }
 }
