@@ -21,16 +21,23 @@ class Timer
             self::$time = $time;
         }
         self::installHandler();
-        pcntl_alarm(1);
+//        if (\function_exists('pcntl_alarm')){
+//            \pcntl_alarm(1);
+//        }else{
+//            echo "没有 pcntl_alarm()这个方法\r\n";
+//        }
+
     }
     /**
      *注册信号处理函数
      */
     public static function installHandler()
     {
+        \pcntl_alarm(1);
         file_put_contents(__DIR__.'/a.txt','2222222');
         echo 'installHandler'."\r\n";
         if (\function_exists('pcntl_signal')) {
+            echo "注入定时器\r\n";
             \pcntl_signal(\SIGALRM, array('Timer', 'signalHandler'), false);
         }else{
             echo "pcntl_signal()方法不存在";
