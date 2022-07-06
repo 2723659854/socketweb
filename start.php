@@ -117,12 +117,13 @@ if ($daemonize) {
 function xiaosongshu_timer()
 {
 
-//    root\Timer::add(2,function (){
-//        require_once __DIR__.'/app/timer/Test.php';
-//        $class=new \App\Time\Test();
-//        $class->handle();
-//    },[],true);
-//    root\Timer::run();
+    require_once __DIR__.'/root/Timer.php';
+    root\Timer::add(2,function (){
+        require_once __DIR__.'/app/timer/Test.php';
+        $class=new \App\Time\Test();
+        $class->handle();
+    },[],true);
+    root\Timer::run();
     while (true) {
         echo 123;
         echo "\r\n";
