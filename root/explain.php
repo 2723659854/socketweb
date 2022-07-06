@@ -117,6 +117,7 @@ class HttpServer
                     }
                     socket_write($socketAccept, 'Content-Type: text/html' . PHP_EOL);
                     socket_write($socketAccept, '' . PHP_EOL);
+                    var_dump($content);
                     if ($content){
                         $write_length=strlen($content);
                         if ($write_length<1024){
