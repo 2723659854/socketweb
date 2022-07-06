@@ -57,6 +57,6 @@ class Index
     public function book(){
         //Cache::getInstance()->set('fuck','fuck you');
         //print_r(Cache::getInstance()->get('fuck'));
-        return '333';
+        return ['code'=>200,'msg'=>'ok'];
     }
 }
