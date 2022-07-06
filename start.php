@@ -103,6 +103,10 @@ if (true) {
         echo "已有脚本正在运行，请勿重复启动，你可以使用stop停止运行或者使用restart重启\r\n";
         exit(0);
     }
+    //加载所有用户定义的文件
+    foreach (traverse(app_path().'/app') as $key => $val) {
+        require_once $val;
+    }
 }
 
 //运行程序
@@ -139,7 +143,6 @@ function xiaosongshu_timer()
             root\Timer::add(2,function ()use($className){
                 //require_once __DIR__.'/app/timer/Test.php';
                 //$class=new \App\Time\Test();
-                require_once realpath($className);
                 $class=new $className;
                 $class->handle();
             },[],true);

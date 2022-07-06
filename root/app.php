@@ -25,10 +25,10 @@ function traverse($path = '.')
     return $filePath;
 }
 
-//加载所有用户定义的文件
-foreach (traverse(app_path().'/app') as $key => $val) {
-    require_once $val;
-}
+////加载所有用户定义的文件
+//foreach (traverse(app_path().'/app') as $key => $val) {
+//    require_once $val;
+//}
 
 function handle($url, $param,$_request)
 {
