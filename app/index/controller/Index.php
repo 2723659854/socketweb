@@ -61,7 +61,7 @@ class Index
     }
 
     public function back_url(Request $request){
-        var_dump($request);
+        //var_dump($request);
         return ['code'=>200,'msg'=>'ok'];
     }
 }

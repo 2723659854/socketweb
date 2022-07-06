@@ -47,9 +47,9 @@ class HttpServer
             //echo $request;
             $_param=[];
             //向接受的文件写入响应code
-            socket_write($socketAccept, 'HTTP/1.1 200 OK' . PHP_EOL);
+            socket_write($socketAccept, 'HTTP/1.1 200 OK' . PHP_EOL,1024);
             //写入时间
-            socket_write($socketAccept, 'Date:' . date('Y-m-d H:i:s') . PHP_EOL);
+            socket_write($socketAccept, 'Date:' . date('Y-m-d H:i:s') . PHP_EOL,1024);
 
             //解析用户访问的文件
             $_mark=$this->getUri($request);
@@ -115,8 +115,8 @@ class HttpServer
                     }else{
                         $content=handle(route($url),$_param,$_request);
                     }
-                    socket_write($socketAccept, 'Content-Type: text/html' . PHP_EOL);
-                    socket_write($socketAccept, '' . PHP_EOL);
+                    socket_write($socketAccept, 'Content-Type: text/html' . PHP_EOL,1024);
+                    socket_write($socketAccept, '' . PHP_EOL,1024);
 
                     if ($content){
                         $content=is_string($content)?$content:json_encode($content);
