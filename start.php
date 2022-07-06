@@ -104,8 +104,10 @@ if (true) {
         exit(0);
     }
     //加载所有用户定义的文件
-    foreach (traverse(app_path().'/app') as $key => $val) {
-        require_once $val;
+    foreach (traverse(app_path().'/app/timer') as $key => $val) {
+        if (file_exists($val)){
+            require_once $val;
+        }
     }
 }
 
