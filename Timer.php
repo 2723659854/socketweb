@@ -96,17 +96,17 @@ class Timer
 }
 function say($name=''){
 
-    file_put_contents(__DIR__.'/time.txt','___________'.time()."\r\n");
+    file_put_contents(__DIR__.'/time.txt','BB'.time()."\r\n");
 }
 
 $time=new Timer();
 $time::add(2,function (){
-    file_put_contents(__DIR__.'/time.txt','____++++___'.time()."\r\n");
+    file_put_contents(__DIR__.'/time.txt','AA'.time()."\r\n");
 },['name'=>'tome'],false);
 $time::run();
 
 //say();
 Timer::add(1,function (){
-    file_put_contents(__DIR__.'/time.txt','____++++___'.time()."\r\n");
+    file_put_contents(__DIR__.'/time.txt','AA'.time()."\r\n");
 },[],true);
 Timer::run();
