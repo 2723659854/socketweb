@@ -115,13 +115,9 @@ if ($daemonize) {
 //业务逻辑代码示例，用于观测脚本是否正在运行，具体业务逻辑自己实现
 function say()
 {
-    global $log_file;
-    file_put_contents(getmypid().'_.txt',getmypid());
+
     while (true) {
-        $fp = fopen($log_file, 'a+');
-        fwrite($fp, time() . "----" . getmypid() . "\r\n");
-        fclose($fp);
-        sleep(2);
+        pcntl_signal_dispatch();
     }
 }
 
@@ -201,7 +197,8 @@ function daemon()
     }
     //业务逻辑在子进程运行
     //many();
-    nginx();
+    //nginx();
+    say();
     //再次创建一个子进程，Fork再次避免系统重新控制终端
     $pid = \pcntl_fork();
     if (-1 === $pid) {
