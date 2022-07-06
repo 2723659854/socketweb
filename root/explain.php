@@ -170,6 +170,7 @@ class HttpServer
             }
         }
         $fuck='';
+        var_dump($array);
         $url=$array[1];
         $method=$array[0];
         //其他的参数，都拆分成数组
