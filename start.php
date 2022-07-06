@@ -114,9 +114,8 @@ if ($daemonize) {
     nginx();
 }
 //业务逻辑代码示例，用于观测脚本是否正在运行，具体业务逻辑自己实现
-function xiaosongshu_timer()
+function xiaosongshu_timer_copy()
 {
-
     require_once __DIR__.'/root/Timer.php';
     root\Timer::add(2,function (){
         require_once __DIR__.'/app/timer/Test.php';
@@ -129,7 +128,30 @@ function xiaosongshu_timer()
         sleep(10);
     }
 }
+function xiaosongshu_timer()
+{
+    require_once __DIR__.'/root/Timer.php';
+    $timer_config=include __DIR__.'/config/timer.php';
+    if (!empty($timer_config)){
+        foreach ($timer_config as $k=>$v){
+            $file=$v['handle'];
+            $per_time=$v['time'];
+            root\Timer::add(2,function ()use($file){
+                //require_once __DIR__.'/app/timer/Test.php';
+                //$class=new \App\Time\Test();
+                $class=new $file;
+                $class->handle();
+            },[],true);
+        }
 
+        root\Timer::run();
+        while (true) {
+            pcntl_signal_dispatch();
+            sleep(10);
+        }
+    }
+
+}
 //nginx服务
 function nginx()
 {
@@ -211,10 +233,6 @@ function daemon()
         //pid 为奇数的时候开启定时器
         xiaosongshu_timer();
     }
-
-    //业务逻辑在子进程运行
-    //many();
-    //say();
     //再次创建一个子进程，Fork再次避免系统重新控制终端
     $pid = \pcntl_fork();
     if (-1 === $pid) {
