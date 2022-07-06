@@ -141,15 +141,14 @@ function xiaosongshu_timer()
     if (!empty($timer_config)){
         foreach ($timer_config as $k=>$v){
             $className=$v['handle'];
-            $per_time=$v['time'];
-            root\Timer::add(2,function ()use($className){
-                //require_once __DIR__.'/app/timer/Test.php';
-                //$class=new \App\Time\Test();
-                $class=new $className;
-                $class->handle();
-            },[],true);
+            $time=$v['time'];
+            if (class_exists($className)){
+                root\Timer::add(intval($time),function ()use($className){
+                    $class=new $className;
+                    $class->handle();
+                },[],true);
+            }
         }
-
         root\Timer::run();
         while (true) {
             pcntl_signal_dispatch();

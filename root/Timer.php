@@ -63,13 +63,14 @@ class Timer
             return;
         }
         foreach (self::$task as $time => $arr) {
+            print_r(count($arr));
+            echo "\r\n";
             $current = time();
             foreach ($arr as $k => $job) {//遍历每一个任务
                 $func = $job['func']; /*回调函数*/
                 $argv = $job['argv']; /*回调函数参数*/
                 $interval = $job['interval']; /*时间间隔*/
                 $persist = $job['persist']; /*持久化*/
-                //echo 2342342;
                 if ($current == $time) {
                     //todo 如果这个任务的time等于当前时间，则说明马上执行，执行完成后删除任务
                     //当前时间有执行任务
