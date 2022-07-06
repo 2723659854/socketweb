@@ -28,7 +28,8 @@ class Timer
         self::installHandler();
         //每隔n秒给当前进程发送一个SIGALRM信号，
         //todo 启动定时器 这里必须和后面的循环的时间间隔保持一致，否则出现任务被反复重复多次添加，导致反复执行，或者完全不执行
-        pcntl_alarm(self::$time);
+        //pcntl_alarm(self::$time);
+        pcntl_alarm(1);
     }
 
     /**
@@ -49,7 +50,8 @@ class Timer
         self::task();
         //一次信号事件执行完成后,再触发下一次,就是n秒后发送信号
         //todo  这里的时间间隔必须和启动的时间间隔一致，否则会反复重复多次添加任务，导致反复执行，或者不执行
-        pcntl_alarm(self::$time);
+        //pcntl_alarm(self::$time);
+        pcntl_alarm(1);
     }
 
     /**
@@ -75,15 +77,16 @@ class Timer
                     call_user_func_array($func, $argv);
                     //删除该任务
                     unset(self::$task[$time][$k]);
+                    if ($persist) {//如果做持久化,则写入数组,等待下次唤醒
+                        self::$task[$current + $interval][] = $job;
+                    }
                 }
 
                 //todo 这里有一个bug
                 //如果任务间隔大于闹钟间隔，则会出现任务累加，越来越多，而且都被执行
                 //如果任务间隔小于闹钟间隔，则会出现存入很多个任务，但是都没有被执行
                 //所以必须是任务间隔等于闹钟间隔，所有任务才能够被执行
-                if ($persist) {//如果做持久化,则写入数组,等待下次唤醒
-                    self::$task[$current + $interval][] = $job;
-                }
+
             }
             if (empty(self::$task[$time])) {
                 unset(self::$task[$time]);
