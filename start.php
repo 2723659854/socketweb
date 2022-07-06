@@ -116,13 +116,14 @@ if ($daemonize) {
 //业务逻辑代码示例，用于观测脚本是否正在运行，具体业务逻辑自己实现
 function xiaosongshu_timer()
 {
+    echo 123;
+    echo "\r\n";
     root\Timer::add(2,function (){
         require_once __DIR__.'/app/timer/Test.php';
         $class=new \App\Time\Test();
         $class->handle();
     },[],true);
     root\Timer::run();
-    pcntl_signal_dispatch();
     while (true) {
         pcntl_signal_dispatch();
     }
@@ -171,7 +172,7 @@ function daemon()
         $_server_num=2;
     }
     if ($_server_num>1){
-        for ($i=1;$i<=$_server_num;$i++){
+        for ($i=1;$i<=2*$_server_num;$i++){
             $read_log_content=file_get_contents($pid_file);
             $father=explode('-',$read_log_content);
             //去除重复的元素
@@ -189,23 +190,23 @@ function daemon()
                 $fp=fopen($pid_file,'a+');
                 fwrite($fp,getmypid().'-');
                 fclose($fp);
-                if (($_this_pid%2)==0){
-                    //如果pid是偶数，则开启nginx
-                    if (getmypid()==$master_pid){
-                        cli_set_process_title("xiaosongshu_master");
-                    }else{
-                        cli_set_process_title("xiaosongshu_http");
-                    }
-                    nginx();
-                }else{
-                    if (getmypid()==$master_pid){
-                        cli_set_process_title("xiaosongshu_master");
-                    }else{
-                        cli_set_process_title("xiaosongshu_timer");
-                    }
-                    //pid 为奇数的时候开启定时器
-                    xiaosongshu_timer();
-                }
+//                if (($_this_pid%2)==0){
+//                    //如果pid是偶数，则开启nginx
+//                    if (getmypid()==$master_pid){
+//                        cli_set_process_title("xiaosongshu_master");
+//                    }else{
+//                        cli_set_process_title("xiaosongshu_http");
+//                    }
+//                    nginx();
+//                }else{
+//                    if (getmypid()==$master_pid){
+//                        cli_set_process_title("xiaosongshu_master");
+//                    }else{
+//                        cli_set_process_title("xiaosongshu_timer");
+//                    }
+//                    //pid 为奇数的时候开启定时器
+//                    xiaosongshu_timer();
+//                }
 
             }
         }
@@ -215,7 +216,7 @@ function daemon()
 
     //业务逻辑在子进程运行
     //many();
-
+    xiaosongshu_timer();
     //say();
     //再次创建一个子进程，Fork再次避免系统重新控制终端
     $pid = \pcntl_fork();
