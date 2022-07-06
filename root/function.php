@@ -40,3 +40,11 @@ function traverse($path = '.')
     }
     return $filePath;
 }
+
+function install_base_file(){
+    require_once __DIR__.'/Timer.php';
+    require_once __DIR__.'/view.php';
+    require_once __DIR__.'/Request.php';
+    require_once __DIR__.'/BaseModel.php';
+    require_once __DIR__.'/Cache.php';
+}

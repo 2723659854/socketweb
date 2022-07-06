@@ -63,8 +63,6 @@ class Timer
             return;
         }
         foreach (self::$task as $time => $arr) {
-            print_r(count($arr));
-            echo "\r\n";
             $current = time();
             foreach ($arr as $k => $job) {//遍历每一个任务
                 $func = $job['func']; /*回调函数*/

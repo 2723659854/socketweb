@@ -3,13 +3,10 @@
 require_once __DIR__.'/function.php';
 require_once __DIR__.'/view.php';
 require_once __DIR__.'/Request.php';
-require_once __DIR__.'/BaseModel.php';
-require_once __DIR__.'/Cache.php';
-require_once __DIR__ . '/Timer.php';
-
-
-
-////加载所有用户定义的文件
+//require_once __DIR__.'/BaseModel.php';
+//require_once __DIR__.'/Cache.php';
+//require_once __DIR__ . '/Timer.php';
+//加载所有用户定义的文件
 //foreach (traverse(app_path().'/app') as $key => $val) {
 //    require_once $val;
 //}
