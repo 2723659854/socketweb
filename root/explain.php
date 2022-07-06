@@ -40,6 +40,7 @@ class HttpServer
         socket_listen($this->_socket, 5);
         //这里通过一个死循环达到常驻内存的效果
         while (true) {
+            pcntl_signal_dispatch();
             //接受socket信息流，监听连接并接受信息流
             $socketAccept = socket_accept($this->_socket);
             //读取信息流

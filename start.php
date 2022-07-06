@@ -9,6 +9,7 @@ ini_set('memory_limit',-1);
 $daemonize = false;//是否已守护进程模式运行
 $flag = true;//是否结束脚本运行
 global $pid_file, $log_file, $_port,$_listen,$_server_num;
+require_once __DIR__.'/root/Timer.php';
 $server = include __DIR__ . '/config/server.php';
 if (isset($server['port']) && $server['port']) {
     $_port = intval($server['port']);
@@ -185,6 +186,10 @@ function daemon()
             }
         }
     }
+    //todo 这里需要给每一个进程创建一个定时任务
+//    root\Timer::add(2,App\Time\Test::class,[],true);
+//    root\Timer::run();
+
     if (getmypid()==$master_pid){
         cli_set_process_title("xiaosongshu_master");
     }else{
