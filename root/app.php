@@ -7,23 +7,7 @@ require_once __DIR__.'/BaseModel.php';
 require_once __DIR__.'/Cache.php';
 require_once __DIR__ . '/Timer.php';
 
-//加载控制器和所有模型,否则无法直接use使用某一个类
-function traverse($path = '.')
-{
-    global $filePath;//得到外部定义的数组
-    $current_dir = opendir($path); //opendir()返回一个目录句柄,失败返回false
-    while (($file = readdir($current_dir)) !== false) { //readdir()返回打开目录句柄中的一个条目
-        $sub_dir = $path . DIRECTORY_SEPARATOR . $file; //构建子目录路径
-        if ($file == '.' || $file == '..') {
-            continue;
-        } else if (is_dir($sub_dir)) { //如果是目录,进行递归
-            traverse($sub_dir); //嵌套遍历子文件夹
-        } else { //如果是文件,直接输出路径和文件名
-            $filePath[$path . '/' . $file] = $path . '/' . $file;//把文件路径赋值给数组
-        }
-    }
-    return $filePath;
-}
+
 
 ////加载所有用户定义的文件
 //foreach (traverse(app_path().'/app') as $key => $val) {
