@@ -68,7 +68,6 @@ class Timer
                 $interval = $job['interval']; /*时间间隔*/
                 $persist = $job['persist']; /*持久化*/
                 //echo 2342342;
-                echo $func;echo "\r\n";
                 if ($current == $time) {
                     //todo 如果这个任务的time等于当前时间，则说明马上执行，执行完成后删除任务
                     //当前时间有执行任务
