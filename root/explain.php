@@ -163,6 +163,7 @@ class HttpServer
         $arrayRequest = explode(PHP_EOL, $request);
         $line         = $arrayRequest[0];
 
+        var_dump($arrayRequest);
         //var_dump($arrayRequest);
         //这一段正则规则在windows下面生效，在Linux下不生效
         //$url         = trim(preg_replace('/(\w+)\s\/(.*)\sHTTP\/1.1/i', '$2', $line));
