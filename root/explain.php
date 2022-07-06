@@ -60,7 +60,7 @@ class HttpServer
             }
             $url=$fileName;//用户访问的路由，问号前面的是路径，后面的是参数
             //处理路由当中的/
-            $fileName=implode('/',array_filter(explode('/',$fileName)));
+            //$fileName=implode('/',array_filter(explode('/',$fileName)));
             //获取文件名后缀
             $fileExt  = preg_replace('/^.*\.(\w+)$/', '$1', $fileName);
             //拼接文件完整路径
@@ -102,7 +102,7 @@ class HttpServer
                     //其他类型的都默认为php类型文件，需要php文件解释
                     //非静态资源文件解析路由和参数
                     //解析get路由里面的参数
-                    if (strpos($url,'?')){
+                    if (($url)&&strpos($url,'?')){
                         $request_url=explode('?',$url);
                         $route=$request_url[0];
                         $params=explode('&',$request_url[1]);
@@ -170,9 +170,17 @@ class HttpServer
             }
         }
         $fuck='';
-        var_dump($array);
-        $url=$array[1];
-        $method=$array[0];
+        if (isset($array[1])){
+            $url=$array[1];
+        }else{
+            $url='/';
+        }
+        if (isset($array[0])){
+            $method=$array[0];
+        }else{
+            $method='GET';
+        }
+
         //其他的参数，都拆分成数组
         unset($arrayRequest[0]);
         foreach ($arrayRequest as $k=>$v){

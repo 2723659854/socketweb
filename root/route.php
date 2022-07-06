@@ -5,8 +5,11 @@
 function route($url){
     //var_dump($url);
     //首先拆分路由
-    $url=array_filter(explode('/',$url));
-
+    if ($url){
+        $url=array_filter(explode('/',$url));
+    }else{
+        $url=[];
+    }
     $new_url=[];
     foreach ($url as $k=>$v){
         $new_url[]=$v;
