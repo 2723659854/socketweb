@@ -10,15 +10,19 @@ class Index
     public function __construct(){
 
     }
+
+    public function index(){
+        return view('/index/index',['time'=>date('Y-m-d H:i:s')]);
+    }
     //数据查询
-    public function index(Request $request){
+    public function database(Request $request){
         //print_r($request);
         $var=$request->param('var');
         $str=$request->param('str');
         $user=new User();
         $data=$user->where('username','=','test')->first();
         $app_name=config('app')['app_name'];
-        return view('index/index',['var'=>$var,'str'=>date('Y-m-d H:i:s'),'user'=>json_encode($data),'app_name'=>$app_name]);
+        return view('index/database',['var'=>$var,'str'=>date('Y-m-d H:i:s'),'user'=>json_encode($data),'app_name'=>$app_name]);
     }
 
     //测试数据写入
