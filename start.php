@@ -134,12 +134,13 @@ function xiaosongshu_timer()
     $timer_config=include __DIR__.'/config/timer.php';
     if (!empty($timer_config)){
         foreach ($timer_config as $k=>$v){
-            $file=$v['handle'];
+            $className=$v['handle'];
             $per_time=$v['time'];
-            root\Timer::add(2,function ()use($file){
+            root\Timer::add(2,function ()use($className){
                 //require_once __DIR__.'/app/timer/Test.php';
                 //$class=new \App\Time\Test();
-                $class=new $file;
+                require_once realpath($className);
+                $class=new $className;
                 $class->handle();
             },[],true);
         }
