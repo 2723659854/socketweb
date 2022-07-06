@@ -125,10 +125,8 @@ function xiaosongshu_timer()
     },[],true);
     root\Timer::run();
     while (true) {
-        echo 123;
-        echo "\r\n";
         pcntl_signal_dispatch();
-        sleep(1);
+        sleep(10);
     }
 }
 
