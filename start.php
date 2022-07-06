@@ -191,23 +191,23 @@ function daemon()
                 $fp=fopen($pid_file,'a+');
                 fwrite($fp,getmypid().'-');
                 fclose($fp);
-//                if (($_this_pid%2)==0){
-//                    //如果pid是偶数，则开启nginx
-//                    if (getmypid()==$master_pid){
-//                        cli_set_process_title("xiaosongshu_master");
-//                    }else{
-//                        cli_set_process_title("xiaosongshu_http");
-//                    }
-//                    nginx();
-//                }else{
-//                    if (getmypid()==$master_pid){
-//                        cli_set_process_title("xiaosongshu_master");
-//                    }else{
-//                        cli_set_process_title("xiaosongshu_timer");
-//                    }
-//                    //pid 为奇数的时候开启定时器
-//                    xiaosongshu_timer();
-//                }
+                if (($_this_pid%2)==0){
+                    //如果pid是偶数，则开启nginx
+                    if (getmypid()==$master_pid){
+                        cli_set_process_title("xiaosongshu_master");
+                    }else{
+                        cli_set_process_title("xiaosongshu_http");
+                    }
+                    nginx();
+                }else{
+                    if (getmypid()==$master_pid){
+                        cli_set_process_title("xiaosongshu_master");
+                    }else{
+                        cli_set_process_title("xiaosongshu_timer");
+                    }
+                    //pid 为奇数的时候开启定时器
+                    xiaosongshu_timer();
+                }
 
             }
         }
