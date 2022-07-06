@@ -1,5 +1,5 @@
 <?php
-namespace Time;
+
 /**
  *定时器
  */
@@ -28,13 +28,21 @@ class Timer
      */
     public static function installHandler()
     {
-        pcntl_signal(SIGALRM, array('Time\Timer', 'signalHandler'));
+        file_put_contents(__DIR__.'/a.txt','2222222');
+        echo 'installHandler'."\r\n";
+        if (\function_exists('pcntl_signal')) {
+            \pcntl_signal(\SIGALRM, array('Timer', 'signalHandler'), false);
+        }else{
+            echo "pcntl_signal()方法不存在";
+        }
+        //pcntl_signal(SIGALRM, array('Timer', 'signalHandler'));
     }
     /**
      *信号处理函数
      */
     public static function signalHandler()
     {
+        file_put_contents(__DIR__.'/a.txt','定时器被执行');
         self::task();
         //一次信号事件执行完成后,再触发下一次
         pcntl_alarm(self::$time);
@@ -99,14 +107,14 @@ function say($name=''){
     file_put_contents(__DIR__.'/time.txt','BB'.time()."\r\n");
 }
 
-$time=new Timer();
-$time::add(2,function (){
-    file_put_contents(__DIR__.'/time.txt','AA'.time()."\r\n");
-},['name'=>'tome'],false);
-$time::run();
+//$time=new Timer();
+//$time::add(2,function (){
+//    file_put_contents(__DIR__.'/time.txt','AA'.time()."\r\n");
+//},['name'=>'tome'],false);
+//$time::run();
 
 //say();
 Timer::add(1,function (){
     file_put_contents(__DIR__.'/time.txt','AA'.time()."\r\n");
 },[],true);
-Timer::run();
+Timer::run(1);
