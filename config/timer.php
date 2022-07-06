@@ -8,6 +8,6 @@ return [
     ],
     'other'=>[
         'handle'=>\App\Time\OtherTimer::class,
-        'time'=>4,
+        'time'=>7,
     ],
 ];

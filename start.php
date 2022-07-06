@@ -215,23 +215,7 @@ function daemon()
         cli_set_process_title("xiaosongshu_http");
         nginx();
     }
-    /*if (($_this_pid%2)==0){
-        //如果pid是偶数，则开启nginx
-        if (getmypid()==$master_pid){
-            cli_set_process_title("xiaosongshu_master");
-        }else{
-            cli_set_process_title("xiaosongshu_http");
-        }
-        nginx();
-    }else{
-        if (getmypid()==$master_pid){
-            cli_set_process_title("xiaosongshu_master");
-        }else{
-            cli_set_process_title("xiaosongshu_timer");
-        }
-        //pid 为奇数的时候开启定时器
-        xiaosongshu_timer();
-    }*/
+
     //再次创建一个子进程，Fork再次避免系统重新控制终端
     $pid = \pcntl_fork();
     if (-1 === $pid) {
