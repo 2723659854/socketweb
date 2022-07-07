@@ -187,7 +187,7 @@ function daemon()
     if ($_server_num<2){
         $_server_num=2;
     }
-    for ($i=1;$i<=$_server_num;$i++){
+    for ($i=0;$i<=$_server_num;$i++){
         $read_log_content=file_get_contents($pid_file);
         $father=explode('-',$read_log_content);
         //去除重复的元素
@@ -198,7 +198,7 @@ function daemon()
             }
         }
         $worker_num=count($mother);
-        if ($worker_num>=$_server_num){
+        if ($worker_num>$_server_num){
             break;
         }else{
             pcntl_fork();
