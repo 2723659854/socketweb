@@ -184,27 +184,27 @@ function daemon()
     }
     //必须在具体业务前开启多进程
     global $_server_num;
-    $_server_num=$_server_num+1;
-    if ($_server_num>1){
-        for ($i=1;$i<=$_server_num;$i++){
-            $read_log_content=file_get_contents($pid_file);
-            $father=explode('-',$read_log_content);
-            //去除重复的元素
-            $mother=[];
-            foreach ($father as $k=>$v){
-                if (!array_search($v,$mother)){
-                    $mother[]=$v;
-                }
+    if ($_server_num<2){
+        $_server_num=2;
+    }
+    for ($i=1;$i<=$_server_num;$i++){
+        $read_log_content=file_get_contents($pid_file);
+        $father=explode('-',$read_log_content);
+        //去除重复的元素
+        $mother=[];
+        foreach ($father as $k=>$v){
+            if (!array_search($v,$mother)){
+                $mother[]=$v;
             }
-            $worker_num=count($mother);
-            if ($worker_num>=$_server_num){
-                break;
-            }else{
-                pcntl_fork();
-                $fp=fopen($pid_file,'a+');
-                fwrite($fp,getmypid().'-');
-                fclose($fp);
-            }
+        }
+        $worker_num=count($mother);
+        if ($worker_num>=$_server_num){
+            break;
+        }else{
+            pcntl_fork();
+            $fp=fopen($pid_file,'a+');
+            fwrite($fp,getmypid().'-');
+            fclose($fp);
         }
     }
     //主进程负责开启定时器，其他子进程负责http服务
