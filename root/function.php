@@ -1,5 +1,5 @@
 <?php
-
+//use Redis;
 function input(?string $name){
     $data=$_GET;
     if ($name){
@@ -47,4 +47,29 @@ function install_base_file(){
     require_once __DIR__.'/Request.php';
     require_once __DIR__.'/BaseModel.php';
     require_once __DIR__.'/Cache.php';
+    require_once __DIR__.'/queue/Queue.php';
 }
+
+//队列消费
+function _queue_xiaosongshu(){
+    try{
+        $config=config('redis');
+        $host=isset($config['host'])?$config['host']:'127.0.0.1';
+        $port=isset($config['port'])?$config['port']:'6379';
+        $client=new Redis();
+        $client->connect($host,$port);
+        while(true){
+            $job=json_decode($client->RPOP('queue'),true);
+            if (class_exists($job['class'])){
+                $class=new $job['class']($job['param']);
+                $class->handle();
+            }else{
+                throw new Exception($job['class'].'不存在，队列任务执行失败！');
+            }
+        }
+    }catch (\Exception $exception){
+        echo $exception->getMessage();
+        echo "\r\n";
+    }
+}
+

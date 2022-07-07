@@ -4,6 +4,7 @@ use App\Model\User;
 use App\Model\Book;
 use Root\Request;
 use Root\Cache;
+use App\Queue\Test;
 class Index
 {
     //如果需要渲染模板就调用view 不需要渲染模板就不调用view
@@ -39,13 +40,13 @@ class Index
         return view('index/say');
     }
 
-    //文件上传，以及缓存用法
+    //测试文件上传，以及缓存用法
     public function upload(){
         Cache::getInstance()->set('name','小松鼠');
         return view('index/upload',['cache'=>Cache::getInstance()->get('name')]);
     }
 
-    //表单提交和文件上传
+    //测试表单提交和文件上传
     public function store(Request $request){
         //var_dump($request);
 
@@ -53,15 +54,22 @@ class Index
         $modify=$request->param('modify');
         return view('index/say',['file'=>json_encode($file),'modify'=>$modify]);
     }
-    //直接返回数据
+    //测试直接返回数据
     public function book(){
         //Cache::getInstance()->set('fuck','fuck you');
         //print_r(Cache::getInstance()->get('fuck'));
         return ['code'=>200,'msg'=>'ok'];
     }
 
+    //测试接收数据并直接返回数据
     public function back_url(Request $request){
         //var_dump($request);
         return ['code'=>200,'msg'=>'ok'];
+    }
+
+    //测试队列
+    public function queue(){
+        Test::dispatch(['name'=>'hanmeimei','age'=>'58']);
+        return '推送消息成功';
     }
 }

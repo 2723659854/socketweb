@@ -4,6 +4,7 @@
  * @date 2022年6月30日18:10:56
  * @description php守护进程模式运行原理
  * */
+//use Redis;
 $param = $argv;
 ini_set('memory_limit',-1);
 $daemonize = false;//是否已守护进程模式运行
@@ -26,13 +27,6 @@ $_listen="http://127.0.0.1:".$_port;
 $httpServer = null;
 $need_close = false;//是否需要关闭进程
 $pid_file = __DIR__.'/my_pid.txt';//pid存放文件
-$log_file = __DIR__.'/log.txt';//业务逻辑存放文件
-if (file_exists($log_file)){
-    $log=file_get_contents($log_file)."\r\n===================start==============\r\n";
-}else{
-    $log=''."\r\n===================start==============\r\n";
-}
-file_put_contents($log_file,$log);
 //检测是否是windows运行环境
 $system = true;//Linux系统
 $httpServer = null;
@@ -41,6 +35,12 @@ if (\DIRECTORY_SEPARATOR === '\\') {
 }
 //运行环境检测
 check_env();
+//加载所有用户定义的文件
+foreach (traverse(app_path().'/app') as $key => $val) {
+    if (file_exists($val)){
+        require_once $val;
+    }
+}
 //运行参数处理
 if (count($param) > 1) {
     switch ($param[1]) {
@@ -76,12 +76,18 @@ if (count($param) > 1) {
                 echo "当前环境是windows,只能在控制台运行\r\n";
             }
             break;
+        case "queue":
+            //单独打开一个进程执行队列，直接阻塞在此处
+            echo "测试队列,你可以按CTRL+C停止\r\n";
+            \cli_set_process_title("xiaosongshu_queue");
+            xiaosongshu_queue();
+            break;
         default:
             echo "未识别的命令\r\n";
             $flag = false;
     }
 } else {
-    echo "缺少必要参数，你可以输入start,start -d,stop,restart\r\n";
+    echo "缺少必要参数，你可以输入start,start -d,stop,restart,queue\r\n";
     $flag = false;
 }
 
@@ -103,12 +109,7 @@ if (true) {
         echo "已有脚本正在运行，请勿重复启动，你可以使用stop停止运行或者使用restart重启\r\n";
         exit(0);
     }
-    //加载所有用户定义的文件
-    foreach (traverse(app_path().'/app') as $key => $val) {
-        if (file_exists($val)){
-            require_once $val;
-        }
-    }
+
 }
 
 //运行程序
@@ -209,8 +210,21 @@ function daemon()
     //主进程负责开启定时器，其他子进程负责http服务
     $_this_pid=getmypid();
     if ($_this_pid==$master_pid){
-        cli_set_process_title("xiaosongshu_master");
-        xiaosongshu_timer();
+        //todo 这里再创建一个子进程，用来监控队列
+        pcntl_fork();
+        if (getmypid()==$master_pid){
+            //定时器进程
+            cli_set_process_title("xiaosongshu_master");
+            xiaosongshu_timer();
+        }else{
+            //队列进程
+            cli_set_process_title("xiaosongshu_queue");
+            $fp=fopen($pid_file,'a+');
+            fwrite($fp,getmypid().'-');
+            fclose($fp);
+            xiaosongshu_queue();
+        }
+
     }else{
         cli_set_process_title("xiaosongshu_http");
         nginx();
@@ -226,15 +240,12 @@ function daemon()
     }
 }
 
-//开启多进程
-function many(){
-    global $pid_file;
-    //将进程pid写入到文件当中，方便关闭进程，重启进程
-    $fp=fopen($pid_file,'a+');
-    fwrite($fp,getmypid().'-');
-    fclose($fp);
-    nginx();
+//队列消费者
+function xiaosongshu_queue(){
+
+   _queue_xiaosongshu();
 }
+
 
 //关闭运行的进程
 function close()
@@ -264,16 +275,4 @@ function check_env()
     }
 }
 
-//这里采用文件添加独占锁的形式，如果一个进程在后台运行，这个文件被占用了，这个脚本就不能往下执行了，只有这个进程被关闭后才会被释放
-function check_run()
-{
-    //不仅daemon模式检查是否已经运行，
-    $fd = fopen('/lock.txt', 'w');
-    //这里必须是非阻塞写入，否则进程一直挂在这里不动了
-    $res = flock($fd, LOCK_EX | LOCK_NB);
-    if (!$res) {
-        echo "已有脚本正在运行，请勿重复启动\r\n";
-        exit(0);
-    }
-}
 

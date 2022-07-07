@@ -16,6 +16,8 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "ext-pcntl": "*"
+        "ext-pcntl": "*",
+      "ext-redis": "*",
+        "ext-posix": "*"
     }
 }

@@ -8,11 +8,16 @@ class Cache
 
     private function __construct()
     {
-        $config=config('redis');
-        $client=new Redis();
-        $client->connect($config['host'],$config['port']);
-        $this->client=$client;
+//        $config=config('redis');
+//        $client=new Redis();
+//        $client->connect($config['host'],$config['port']);
+//        $this->client=$client;
 
+
+
+        $client=new Redis();
+        $client->connect('127.0.0.1','6379');
+        $this->client=$client;
     }
 
     /**
