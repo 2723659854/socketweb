@@ -137,11 +137,11 @@ function xiaosongshu_timer()
                 },[],true);
             }
         }
-        root\Timer::run();
-        while (true) {
-            pcntl_signal_dispatch();
-            sleep(10);
-        }
+    }
+    root\Timer::run();
+    while (true) {
+        pcntl_signal_dispatch();
+        sleep(10);
     }
 
 }
