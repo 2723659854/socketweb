@@ -4,7 +4,7 @@
 //第二种兼容windows系统的，单独开一个进程，这个进程就是消费者，生产者将任务放到redis队列list中，消费者依次从list中取出任务执行，延迟队列就是单独放
 //到有序队列zlist当中，每次取出任务，判断当前任务的执行时间是否和当前的时间一致，是则放到list队列中。
 //下面是最简单的队列模型
-require_once __DIR__.'/app/queue/Test.php';
+require_once __DIR__ . '/app/queue/Test.php';
 $job=new \App\Queue\Test();
 $job->dispatch(['name'=>'tom','age'=>17]);
 $client=new Redis();
