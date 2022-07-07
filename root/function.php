@@ -60,11 +60,14 @@ function _queue_xiaosongshu(){
         $client->connect($host,$port);
         while(true){
             $job=json_decode($client->RPOP('queue'),true);
-            if (class_exists($job['class'])){
-                $class=new $job['class']($job['param']);
-                $class->handle();
-            }else{
-                throw new Exception($job['class'].'不存在，队列任务执行失败！');
+            if (!empty($job)){
+                if (class_exists($job['class'])){
+                    $class=new $job['class']($job['param']);
+                    $class->handle();
+                }else{
+                    echo $job['class'].'不存在，队列任务执行失败！';
+                    echo "\r\n";
+                }
             }
         }
     }catch (\Exception $exception){
