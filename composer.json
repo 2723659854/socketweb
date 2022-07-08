@@ -16,7 +16,7 @@
             "email": "2723659854@qq.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
         "ext-pcntl": "*",
       "ext-redis": "*",
