@@ -60,29 +60,17 @@ function _queue_xiaosongshu(){
         $client->connect($host,$port);
         while(true){
             $job=json_decode($client->RPOP('queue'),true);
-            echo "普通任务\r\n";
             deal_job($job);
-            /*if (!empty($job)){
-                if (class_exists($job['class'])){
-                    $class=new $job['class']($job['param']);
-                    $class->handle();
-                }else{
-                    echo $job['class'].'不存在，队列任务执行失败！';
-                    echo "\r\n";
-                }
-            }*/
             $res=$client->zRangeByScore('xiaosongshu_delay_queue',0,time(),['limit'=>1]);
             if ($res){
-                //如果有任务，则只处理一个
                 $value=$res[0];
-                //移除队列key 当中的成员value,
                 $res1=$client->zRem('xiaosongshu_delay_queue',$value);
                 if ($res1){
-                    echo "延迟队列任务\r\n";
                     $job=json_decode($value,true);
                     deal_job($job);
                 }
             }
+            sleep(1);
         }
     }catch (\Exception $exception){
         echo $exception->getMessage();
