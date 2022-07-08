@@ -1,5 +1,5 @@
 <?php
-namespace App\Index\Controller;
+namespace App\Controller\Index;
 use App\Model\User;
 use App\Model\Book;
 use Root\Request;

@@ -3,7 +3,7 @@
 /**
  * 本控制器演示了门面facade类的用法
  */
-namespace App\Admin\Controller;
+namespace App\Controller\Admin;
 use APP\Facade\Cache;
 use APP\Facade\User;
 class Index
