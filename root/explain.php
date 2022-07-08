@@ -35,10 +35,11 @@ class HttpServer
     {
         //header("Content-Type:text/html;charset=utf-8");
         //将将连接绑定到ip和端口
-        socket_bind($this->_socket, $this->ip, $this->port);
+        @\socket_bind($this->_socket, $this->ip, $this->port);
         //socket开始监听
-        socket_listen($this->_socket, 5);
+        @\socket_listen($this->_socket, 5);
         //这里通过一个死循环达到常驻内存的效果
+
         while (true) {
             //pcntl_signal_dispatch();
             //接受socket信息流，监听连接并接受信息流

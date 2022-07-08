@@ -41,6 +41,7 @@ foreach (traverse(app_path().'/app') as $key => $val) {
         require_once $val;
     }
 }
+
 //运行参数处理
 if (count($param) > 1) {
     switch ($param[1]) {
@@ -118,6 +119,7 @@ if ($daemonize) {
 } else {
     echo $_listen."\r\n";
     echo "进程启动完成,你可以按ctrl+c停止运行\r\n";
+
     nginx();
 }
 

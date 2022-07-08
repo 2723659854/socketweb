@@ -41,12 +41,14 @@ composer require xiaosongshu/socketweb
 9，windows默认只开启一个http服务<br>
 10，windows若需要测试队列，请单独开启一个窗口执行 php start.php queue ，监听队列<br>
 11，windows不支持定时器<br>
-12，业务代码不要使用sleep,exit这两个方法。否则导致整个进程阻塞或者中断。<br>
+
 
 ## 注意
 1，原则上本项目只依赖socket，mysqli，redis扩展和pcntl系列函数，如需要第三方扩展，请自行安装。<br>
 2，因为是常驻内存，所以每一次修改了php代码后需要重启项目。<br>
-3，start.php为项目启动源码，root目录为运行源码，除非你已经完全明白代码意图，否则不要轻易修改代码
+3，start.php为项目启动源码，root目录为运行源码，除非你已经完全明白代码意图，否则不要轻易修改代码。<br>
+4，所有的控制器方法都必须返回一个字符串，否则连接一直占用进程，超时后系统自动断开连接。<br>
+5，业务代码不要使用sleep,exit这两个方法。否则导致整个进程阻塞或者中断。<br>
 ## 联系开发者
 2723659854@qq.com<br>
 171892716@qq.com
