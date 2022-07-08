@@ -21,6 +21,8 @@ class Queue
         //$class=__CLASS__;
         $class=self::name();
         if($delay>0){
+            //防止同一时刻多个用户发送相同的任务
+            $param['rand']=uniqid();
             $client->zAdd('xiaosongshu_delay_queue',['NX'],time()+$delay,json_encode(['class'=>$class,'param'=>$param]));
         }else{
             $client->LPUSH('xiaosongshu_queue',json_encode(['class'=>$class,'param'=>$param]));
