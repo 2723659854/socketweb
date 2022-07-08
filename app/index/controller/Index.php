@@ -93,7 +93,7 @@ class Index
 
     public function query(){
         $user=new User();
-        $res=$user->query('select * form user limit 1 ');
+        $res=$user->query('select * from user limit 1 ');
         return json_encode($res);
     }
 
