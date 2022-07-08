@@ -270,5 +270,53 @@ class BaseModel
         $this->limit=$limit;
         return $this;
     }
+
+    /**
+     * count()
+     * @return $this
+     */
+    public function count(){
+        $this->field='count(*)';
+        return $this;
+    }
+
+    /**
+     * max()
+     * @param string $field
+     * @return $this
+     */
+    public function max($field='id'){
+        $this->field='max('.$field.')';
+        return $this;
+    }
+
+    /**
+     * min()
+     * @param string $field
+     * @return $this
+     */
+    public function min($field='id'){
+        $this->field='min('.$field.')';
+        return $this;
+    }
+
+    /**
+     * ave()
+     * @param string $field
+     * @return $this
+     */
+    public function ave($field='id'){
+        $this->field='ave('.$field.')';
+        return $this;
+    }
+
+    /**
+     * query()
+     * @param string $sql
+     * @return bool|\mysqli_result
+     */
+    public function query($sql=''){
+        return $this->mysql->query($sql);
+    }
 }
 

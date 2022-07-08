@@ -90,4 +90,11 @@ class Index
         Test::dispatch(['name'=>'李磊','age'=>'32'],8);
         return 'push message success!';
     }
+
+    public function query(){
+        $user=new User();
+        $res=$user->query('select * form user limit 1 ');
+        return json_encode($res);
+    }
+
 }
