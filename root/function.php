@@ -59,7 +59,7 @@ function _queue_xiaosongshu(){
         $client=new Redis();
         $client->connect($host,$port);
         while(true){
-            $job=json_decode($client->RPOP('queue'),true);
+            $job=json_decode($client->RPOP('xiaosongshu_queue'),true);
             deal_job($job);
             $res=$client->zRangeByScore('xiaosongshu_delay_queue',0,time(),['limit'=>1]);
             if ($res){
