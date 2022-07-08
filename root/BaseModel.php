@@ -316,7 +316,13 @@ class BaseModel
      * @return bool|\mysqli_result
      */
     public function query($sql=''){
-        return $this->mysql->query($sql);
+        $res=$this->mysql->query($sql);
+        if (is_object($res)){
+            return $res->fetch_all();
+        }else{
+            return $res;
+        }
+
     }
 }
 

@@ -93,8 +93,9 @@ class Index
 
     public function query(){
         $user=new User();
-        $res=$user->query('select * from user limit 1 ');
-        return json_encode($res);
+        //$res=$user->query('select * from user limit 1 ');
+        $res=$user->query('update user set age =55 where username ="test"');
+        var_dump($res);
     }
 
 }
