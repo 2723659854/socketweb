@@ -47,8 +47,8 @@ class BaseModel
     }
 
     //推断模型对应的表名
-    private function table_name(){
-       return strtolower(get_class());
+    private static function table_name(){
+       return strtolower(get_called_class());
     }
 
     //下面是数据库的链式操作
