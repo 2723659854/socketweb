@@ -9,23 +9,30 @@ composer require xiaosongshu/socketweb
 ## 目录结构
 ~~~
 |-- app
-    |-- admin               <控制层>
-        |-- controller
-        |-- error
+    |-- controller               <控制层>
+        |-- index               <index业务模块>
+        |-- ...                 <其他业务模块>
+    |-- facade                  <门面模块>
+    |-- queue                  <队列任务模块>
+    |-- timer                  <定时任务模块>
     |-- model               <模型层>
 |-- config                  <配置项>
-    ...
+    |--app.php              <项目配置>
+    |--database.php              <数据库配置>
+    |--redis.php              <缓存配置>
+    |--server.php              <http服务配置>
+    |--timer.php              <定时任务配置>
 |-- mysql                 <mysql文件>
     ...
 |-- public                  <公共文件>
 |-- root                <系统目录，建议不要轻易改动>
     ...                     
-|-- vendor                  <外部包>
+|-- vendor                  <外部扩展包>
 |-- view                     <视图层>
         ...             
-|-- composer.json
-|-- README.md
-|-- start.php                  <服务启动器>
+|-- composer.json              <项目依赖>
+|-- README.md                  <项目说明文件>
+|-- start.php                  <服务启动文件>
 ~~~
 
 ## 快速开始
