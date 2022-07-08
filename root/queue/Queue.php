@@ -12,7 +12,7 @@ class Queue
     public function handle(){}
 
     //队列生产者
-    public static function  dispatch($param=[]){
+    public static function  dispatch($param=[],$delay=0){
         $config=config('redis');
         $host=isset($config['host'])?$config['host']:'127.0.0.1';
         $port=isset($config['port'])?$config['port']:'6379';
@@ -20,7 +20,11 @@ class Queue
         $client->connect($host,$port);
         //$class=__CLASS__;
         $class=self::name();
-        $client->LPUSH('queue',json_encode(['class'=>$class,'param'=>$param]));
+        if($delay>0){
+            $client->zAdd('xiaosongshu_delay_queue',['NX'],time()+$delay,json_encode(['class'=>$class,'param'=>$param]));
+        }else{
+            $client->LPUSH('xiaosongshu_queue',json_encode(['class'=>$class,'param'=>$param]));
+        }
         $client->close();
     }
 

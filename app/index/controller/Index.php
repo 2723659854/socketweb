@@ -70,6 +70,16 @@ class Index
     //测试队列
     public function queue(){
         Test::dispatch(['name'=>'hanmeimei','age'=>'58']);
+        Test::dispatch(['name'=>'hanmeimei','age'=>'58']);
+        Test::dispatch(['name'=>'hanmeimei','age'=>'58']);
+        Test::dispatch(['name'=>'hanmeimei','age'=>'58']);
+        Test::dispatch(['name'=>'hanmeimei','age'=>'58']);
+        Test::dispatch(['name'=>'李磊','age'=>'32'],5);
+        Test::dispatch(['name'=>'李磊','age'=>'32'],3);
+        Test::dispatch(['name'=>'李磊','age'=>'32'],4);
+        Test::dispatch(['name'=>'李磊','age'=>'32'],15);
+        Test::dispatch(['name'=>'李磊','age'=>'32'],10);
+        Test::dispatch(['name'=>'李磊','age'=>'32'],8);
         return '推送消息成功';
     }
 }

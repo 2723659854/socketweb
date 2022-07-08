@@ -9,7 +9,7 @@ class DelayQueue
     public function __construct()
     {
         $redis=new Redis();
-        $redis->connect('127.0.0.1',6379);
+        $redis->connect('fj-redis',6379);
         $this->redis=$redis;
     }
 
@@ -49,9 +49,10 @@ class DelayQueue
 }
 
 $model=new DelayQueue();
-$key='fuck';
+$key='xiaosongshu_delay_queue';
 $model->set($key,1,time()+5);
 $model->set($key,2,time()+5);
 $model->set($key,3,time()+10);
 $model->set($key,4,time()+8);
-$model->deal($key);
+$model->set($key,json_encode(['name'=>'tome','age'=>24]),time()+8);
+//$model->deal($key);
