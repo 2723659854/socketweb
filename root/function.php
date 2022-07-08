@@ -70,7 +70,7 @@ function _queue_xiaosongshu(){
                     deal_job($job);
                 }
             }
-            sleep(1);
+            //sleep(1);
         }
     }catch (\Exception $exception){
         echo $exception->getMessage();
