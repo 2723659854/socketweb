@@ -127,6 +127,7 @@ class HttpServer
                         }
                     }else{
                         $write_length=1024;
+                        $content='';
                     }
                     socket_write($socketAccept, $content,$write_length );
 
