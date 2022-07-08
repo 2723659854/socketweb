@@ -6,15 +6,12 @@ class Cache
     private $client=null;
     private static $instance = null;
 
-    private function __construct()
+    public function __construct()
     {
         $config=config('redis');
         $client=new Redis();
         $client->connect($config['host'],$config['port']);
         $this->client=$client;
-
-//        $client=new Redis();
-//        $client->connect('127.0.0.1','6379');
         $this->client=$client;
     }
 
@@ -43,6 +40,7 @@ class Cache
     }
 
     /**
+     * 单例模式 ,这里暂时不用单例，因为要用到观察者模式
      * @return object
      */
     public static function getInstance(): object

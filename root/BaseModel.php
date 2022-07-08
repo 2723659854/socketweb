@@ -1,9 +1,12 @@
 <?php
-
+/*
+ * 这个用起来太老火了，需要修改为外观模式
+ * */
 namespace Root;
 
 use mysqli;
 use mysqli_sql_exception as MysqlException;
+
 class BaseModel
 {
 

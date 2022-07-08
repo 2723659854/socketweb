@@ -113,6 +113,7 @@ class HttpServer
                             $_v=explode('=',$v);
                             $_param[$_v[0]]=$_v['1'];
                         }
+                        //工厂模式
                         $content=handle(route($route),$_param,$_request);
                     }else{
                         $content=handle(route($url),$_param,$_request);

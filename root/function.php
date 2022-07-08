@@ -48,6 +48,7 @@ function install_base_file(){
     require_once __DIR__.'/BaseModel.php';
     require_once __DIR__.'/Cache.php';
     require_once __DIR__.'/queue/Queue.php';
+    require_once __DIR__.'/Facade.php';
 }
 
 //队列消费

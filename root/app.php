@@ -54,6 +54,7 @@ function handle($url, $param,$_request)
     foreach ($param as $k=>$v){
         $fuck->set($k,$v);
     }
+    //todo 工厂模式
     //处理用户请求
     $response=$class->$method($fuck);
     //返回响应结果
