@@ -7,12 +7,15 @@ use Root\Cache;
 use App\Queue\Test;
 class Index
 {
+    //todo 以下代码均为演示代码
     //如果需要渲染模板就调用view 不需要渲染模板就不调用view
     public function __construct(){
 
     }
 
+    //默认首页
     public function index(){
+        //模板在根目录下的view目录里面
         return view('/index/index',['time'=>date('Y-m-d H:i:s')]);
     }
     //数据查询
@@ -23,6 +26,7 @@ class Index
         $user=new User();
         $data=$user->where('username','=','test')->first();
         $app_name=config('app')['app_name'];
+        //模板渲染 参数传递
         return view('index/database',['var'=>$var,'str'=>date('Y-m-d H:i:s'),'user'=>json_encode($data),'app_name'=>$app_name]);
     }
 
@@ -54,10 +58,12 @@ class Index
         $modify=$request->param('modify');
         return view('index/say',['file'=>json_encode($file),'modify'=>$modify]);
     }
-    //测试直接返回数据
+    //测试缓存
     public function book(){
-        //Cache::getInstance()->set('fuck','fuck you');
-        //print_r(Cache::getInstance()->get('fuck'));
+        //设置缓存
+        Cache::getInstance()->set('fuck','fuck you');
+        //获取缓存
+        Cache::getInstance()->get('fuck');
         return ['code'=>200,'msg'=>'ok'];
     }
 
@@ -69,17 +75,19 @@ class Index
 
     //测试队列
     public function queue(){
+        //普通队列
         Test::dispatch(['name'=>'hanmeimei','age'=>'58']);
         Test::dispatch(['name'=>'hanmeimei','age'=>'58']);
         Test::dispatch(['name'=>'hanmeimei','age'=>'58']);
         Test::dispatch(['name'=>'hanmeimei','age'=>'58']);
         Test::dispatch(['name'=>'hanmeimei','age'=>'58']);
+        //延迟队列
         Test::dispatch(['name'=>'李磊','age'=>'32'],5);
         Test::dispatch(['name'=>'李磊','age'=>'32'],3);
         Test::dispatch(['name'=>'李磊','age'=>'32'],4);
         Test::dispatch(['name'=>'李磊','age'=>'32'],15);
         Test::dispatch(['name'=>'李磊','age'=>'32'],10);
         Test::dispatch(['name'=>'李磊','age'=>'32'],8);
-        return '推送消息成功';
+        return 'push message success!';
     }
 }

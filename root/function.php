@@ -70,21 +70,23 @@ function _queue_xiaosongshu(){
                     deal_job($job);
                 }
             }
-            //sleep(1);
         }
     }catch (\Exception $exception){
         echo $exception->getMessage();
         echo "\r\n";
+        echo "redis连接失败";
+        echo "\r\n";
     }
 }
 
+//处理队列任务
 function deal_job($job=[]){
     if (!empty($job)){
         if (class_exists($job['class'])){
             $class=new $job['class']($job['param']);
             $class->handle();
         }else{
-            echo $job['class'].'不存在，延迟队列任务执行失败！';
+            echo $job['class'].'不存在，队列任务执行失败！';
             echo "\r\n";
         }
     }

@@ -1,10 +1,10 @@
 <?php
+
 namespace Root;
 
 /**
  *定时器
  */
-
 class Timer
 {
     /**
@@ -65,10 +65,10 @@ class Timer
         foreach (self::$task as $time => $arr) {
             $current = time();
             foreach ($arr as $k => $job) {//遍历每一个任务
-                $func = $job['func']; /*回调函数*/
-                $argv = $job['argv']; /*回调函数参数*/
+                $func     = $job['func']; /*回调函数*/
+                $argv     = $job['argv']; /*回调函数参数*/
                 $interval = $job['interval']; /*时间间隔*/
-                $persist = $job['persist']; /*持久化*/
+                $persist  = $job['persist']; /*持久化*/
                 if ($current == $time) {
                     //todo 如果这个任务的time等于当前时间，则说明马上执行，执行完成后删除任务
                     //当前时间有执行任务
@@ -102,11 +102,12 @@ class Timer
             return;
         }
         //todo 为了解决上面的bug，设置为添加任务的时候，就同步修改启动时间间隔，循环时间间隔
-        self::$time=$interval;
-        $time = time() + $interval;
+        self::$time = $interval;
+        $time       = time() + $interval;
         //写入定时任务
         self::$task[$time][] = array('func' => $func, 'argv' => $argv, 'interval' => $interval, 'persist' => $persist);
     }
+
     /**
      *删除所有定时器任务
      */
@@ -116,16 +117,3 @@ class Timer
     }
 }
 
-//todo 重复添加任务，会引发雪崩,但是不同进程的定时器不会相互污染
-//Timer::add(3, function () {
-//    echo date('Y-m-d H:i:s');
-//    echo "\r\n";
-//}, [], true);
-//
-//Timer::run();
-////保持常驻进程
-//while (1) {
-//    //捕捉信号
-//    pcntl_signal_dispatch();
-//    sleep(3);
-//}

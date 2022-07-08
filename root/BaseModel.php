@@ -16,7 +16,7 @@ class BaseModel
 
     private $mysql;
     private $sql;
-    public $table = 'user';
+    public $table = '';
     private $field='*';
     private $order='id asc';
     private $limit=0;
@@ -46,6 +46,10 @@ class BaseModel
         $this->sql = '';
     }
 
+    //推断模型对应的表名
+    private function table_name(){
+       return strtolower(get_class());
+    }
 
     //下面是数据库的链式操作
 
@@ -59,6 +63,9 @@ class BaseModel
             $limit=' limit ' .$this->offset.' ,'.$this->limit;
         }else{
             $limit='';
+        }
+        if (!$this->table){
+            $this->table=$this->table_name();
         }
         $sql='select '.$this->field.' from '.$this->table.' where '.$this->sql.' order by '.$this->order.$limit;
 
@@ -81,6 +88,9 @@ class BaseModel
             $limit=' limit ' .$this->offset.' ,'.$this->limit;
         }else{
             $limit='';
+        }
+        if (!$this->table){
+            $this->table=$this->table_name();
         }
         $sql='select '.$this->field.' from '.$this->table.' where '.$this->sql.' order by '.$this->order.$limit;
         try{

@@ -56,7 +56,7 @@ class Request
      */
     public function file($name='file'){
 
-        return isset($this->value['file'])?$this->value['file']:null;
+        return isset($this->value[$name])?$this->value[$name]:(isset($this->value['file'])?$this->value['file']:null);
     }
 
 }
