@@ -3,6 +3,8 @@
     "description": "\"一个php常驻内存轻量级框架\"",
     "type": "project",
     "license": "MIT",
+    "version":"4.0",
+    "keywords" : [ "phpSocket","socketWeb","socket" ],
     "autoload": {
         "psr-4": {
             "Xiaosongshu\\Socketweb\\": "src/"
