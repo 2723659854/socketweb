@@ -71,6 +71,10 @@ function _queue_xiaosongshu(){
                     deal_job($job);
                 }
             }
+            //如果没有任务，则休眠一秒，不然cpu占用率飙升
+            if (empty($job)&&empty($res)){
+                sleep(1);
+            }
         }
     }catch (\Exception $exception){
         echo $exception->getMessage();
