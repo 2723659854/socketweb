@@ -48,6 +48,9 @@ function start_server($param)
     require_once __DIR__ . '/queue/Queue.php';
     require_once __DIR__ . '/Facade.php';
     $_system = true;
+    if (\DIRECTORY_SEPARATOR === '\\') {
+        $_system = false;
+    }
     $httpServer = null;
     $server = include dirname(__DIR__) . '/config/server.php';
     if (isset($server['port']) && $server['port']) {
@@ -229,12 +232,8 @@ function close()
 
 function check_env()
 {
-    global $_system;
     if (!extension_loaded('sockets')) {
         exit("请先安装sockets扩展，然后开启php.ini的sockets扩展");
-    }
-    if (\DIRECTORY_SEPARATOR === '\\') {
-        $_system = false;
     }
 }
 
