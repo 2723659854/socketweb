@@ -1,16 +1,4 @@
 <?php
-//use Redis;
-function input(?string $name){
-    $data=$_GET;
-    if ($name){
-        if (isset($data[$name])){
-            return $data[$name];
-        }else{
-            return null;
-        }
-    }
-}
-
 function app_path(){
     return dirname(__DIR__);
 }
@@ -23,19 +11,19 @@ function public_path(){
     return app_path().'/public';
 }
 
-//加载控制器和所有模型,否则无法直接use使用某一个类
+
 function traverse($path = '.')
 {
-    global $filePath;//得到外部定义的数组
-    $current_dir = opendir($path); //opendir()返回一个目录句柄,失败返回false
-    while (($file = readdir($current_dir)) !== false) { //readdir()返回打开目录句柄中的一个条目
-        $sub_dir = $path . DIRECTORY_SEPARATOR . $file; //构建子目录路径
+    global $filePath;
+    $current_dir = opendir($path);
+    while (($file = readdir($current_dir)) !== false) {
+        $sub_dir = $path . DIRECTORY_SEPARATOR . $file;
         if ($file == '.' || $file == '..') {
             continue;
-        } else if (is_dir($sub_dir)) { //如果是目录,进行递归
-            traverse($sub_dir); //嵌套遍历子文件夹
-        } else { //如果是文件,直接输出路径和文件名
-            $filePath[$path . '/' . $file] = $path . '/' . $file;//把文件路径赋值给数组
+        } else if (is_dir($sub_dir)) {
+            traverse($sub_dir);
+        } else {
+            $filePath[$path . '/' . $file] = $path . '/' . $file;
         }
     }
     return $filePath;
@@ -51,7 +39,7 @@ function install_base_file(){
     require_once __DIR__.'/Facade.php';
 }
 
-//队列消费
+
 function _queue_xiaosongshu(){
     try{
         $config=config('redis');
@@ -71,7 +59,6 @@ function _queue_xiaosongshu(){
                     deal_job($job);
                 }
             }
-            //如果没有任务，则休眠一秒，不然cpu占用率飙升
             if (empty($job)&&empty($res)){
                 sleep(1);
             }
@@ -84,7 +71,7 @@ function _queue_xiaosongshu(){
     }
 }
 
-//处理队列任务
+
 function deal_job($job=[]){
     if (!empty($job)){
         if (class_exists($job['class'])){

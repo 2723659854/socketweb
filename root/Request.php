@@ -47,8 +47,6 @@ class Request
 
     }
 
-    //处理文件
-
     /**
      * 获取文件
      * @param string $name

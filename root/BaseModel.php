@@ -1,7 +1,4 @@
 <?php
-/*
- * 这个用起来太老火了，需要修改为外观模式
- * */
 namespace Root;
 
 use mysqli;
@@ -38,23 +35,18 @@ class BaseModel
         $this->port = $database_config['port'];
         try{
             $mysqli = new mysqli($this->host, $this->username, $this->password, $this->dbname, $this->port);
-            //$mysqli = new mysqli('122.51.99.152', 'root', 'root', 'test', '3306');
         }catch (MysqlException $e){
             echo $e->getMessage();
             die("致命错误：数据库连接失败！".$e->getMessage());
         }
-        //$mysqli = new mysqli('127.0.0.1', 'root', 'root', 'test', '3306');
         $mysqli->set_charset('utf8');
         $this->mysql = $mysqli;
         $this->sql = '';
     }
 
-    //推断模型对应的表名
     private static function table_name(){
        return array_reverse(explode('\\',strtolower(get_called_class())))[0];
     }
-
-    //下面是数据库的链式操作
 
     /**
      * 单条数据查询
@@ -153,7 +145,6 @@ class BaseModel
         return  $this;
     }
 
-    //table 方法
 
     /**
      * 设置表名
@@ -164,7 +155,6 @@ class BaseModel
         $this->table=$name;
         return $this;
     }
-    //设置查询的字段
 
     /**
      * 指定查询字段
@@ -176,7 +166,6 @@ class BaseModel
         return $this;
     }
 
-    //写入
 
     /**
      * 插入
@@ -203,7 +192,6 @@ class BaseModel
 
     }
 
-    //update方法
 
     /**
      * 更新
@@ -229,8 +217,6 @@ class BaseModel
     }
 
 
-    //删除
-
     /**
      * 删除
      * @return bool|\mysqli_result
@@ -246,8 +232,6 @@ class BaseModel
         }
     }
 
-    //排序
-
     /**
      * 排序
      * @param string $field 排序字段
@@ -258,8 +242,6 @@ class BaseModel
         $this->order=$field.' '.$order;
         return $this;
     }
-
-    //分页
 
     /**
      * 分页

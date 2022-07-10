@@ -1,4 +1,4 @@
 <?php
 return [
-  'app_name'=>'SocketWeb',
+  'app_name'=>'fasterWeb',
 ];

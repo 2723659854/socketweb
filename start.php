@@ -1,10 +1,4 @@
 <?php
-/*
- * @author yanglong
- * @date 2022年6月30日18:10:56
- * @description php守护进程模式运行原理
- * */
-//use Redis;
 $param = $argv;
 ini_set('memory_limit',-1);
 $daemonize = false;//是否已守护进程模式运行
@@ -269,7 +263,8 @@ function close()
     }
 }
 
-//环境依赖检测
+
+
 function check_env()
 {
     if (!extension_loaded('sockets')) {
