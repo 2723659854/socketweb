@@ -7,6 +7,7 @@ use App\Model\Book;
 use Root\Request;
 use Root\Cache;
 use App\Queue\Test;
+use APP\Facade\Cache as Fcache;
 
 class Index
 {
@@ -55,8 +56,9 @@ class Index
     //测试文件上传，以及缓存用法
     public function upload()
     {
-        Cache::getInstance()->set('name', '小松鼠');
-        return view('index/upload', ['cache' => Cache::getInstance()->get('name')]);
+
+        Fcache::set('name', '小松鼠');
+        return view('index/upload', ['cache' => Fcache::get('name')]);
     }
 
     //测试表单提交和文件上传

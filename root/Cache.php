@@ -8,11 +8,16 @@ class Cache
 
     public function __construct()
     {
-        $config=config('redis');
-        $client=new Redis();
-        $client->connect($config['host'],$config['port']);
-        $this->client=$client;
-        $this->client=$client;
+        try{
+            $config=config('redis');
+            $client=new Redis();
+            $client->connect($config['host'],$config['port']);
+            $this->client=$client;
+            $this->client=$client;
+        }catch (\Exception $exception){
+            die('致命错误：redis连接失败！详情：'.$exception->getMessage());
+        }
+
     }
 
     /**
